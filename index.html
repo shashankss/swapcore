@@ -201,7 +201,7 @@ section{padding:110px 5vw}
 .sc-band-title{font-family:var(--fd);font-size:2rem;letter-spacing:.1em;color:var(--cyan);margin-bottom:.4rem}
 .sc-band-sub{font-family:var(--fc);font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--g6)}
 /* agents row */
-.agents-row{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin:2rem 0}
+.agents-row{display:grid;grid-template-columns:repeat(6,1fr);gap:.8rem;margin:2rem 0}
 .agent-card{border:1px solid var(--g4);padding:1.1rem;text-align:center;transition:all .3s;position:relative;overflow:hidden}
 .agent-card:hover{border-color:var(--g5);transform:translateY(-2px)}
 .agent-card::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s}
@@ -307,7 +307,7 @@ footer{background:var(--g2);border-top:1px solid var(--g4);padding:4rem 5vw 2.5r
   .fg{grid-template-columns:1fr 1fr;gap:2rem}
   .nl{display:none}
   .mem-layer{grid-template-columns:120px 1fr}
-  .agents-row{grid-template-columns:repeat(2,1fr)}
+  .agents-row{grid-template-columns:repeat(3,1fr)}
   .ctable{font-size:.78rem}
   .stage-features{grid-template-columns:1fr 1fr}
 }
@@ -965,6 +965,12 @@ footer{background:var(--g2);border-top:1px solid var(--g4);padding:4rem 5vw 2.5r
         <div class="ac-stage acs3">Stage 3</div>
         <div class="ac-name">QA Agent</div>
         <div class="ac-desc">Test plan generation, execution, regression analysis, flakiness detection against memory history.</div>
+      </div>
+      <div class="agent-card">
+        <div class="ac-num">06</div>
+        <div class="ac-stage acs3">Stage 3</div>
+        <div class="ac-name">DevOps Agent</div>
+        <div class="ac-desc">PR merge → pipeline trigger → deploy (blue/green, canary, rolling) → monitor → auto-rollback at 1% error rate. All cloud providers.</div>
       </div>
     </div>
 
