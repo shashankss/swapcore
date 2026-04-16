@@ -4,766 +4,1492 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SWAPCORE — AI Development Intelligence Platform</title>
-<meta name="description" content="SWAPCORE is the institutional memory layer for software development teams. Capture every decision, query in plain English, never lose context again.">
+<meta name="description" content="SWAPCORE is the institutional memory layer for software teams. Three stages: memory capture, autonomous agents, full delivery pipeline.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --black:#000;--white:#fff;--g1:#090909;--g2:#111;--g3:#1a1a1a;
-  --g4:#2a2a2a;--g5:#444;--g6:#777;--g7:#aaa;--g8:#ddd;
-  --accent:#00e5ff;--accent2:#7fffb2;--warn:#ffaa00;
-  --red:#ff4040;--coral:#ff6b35;
-  --fd:'Bebas Neue',sans-serif;
-  --fc:'Barlow Condensed',sans-serif;
-  --fb:'Barlow',sans-serif;
-  --fm:'JetBrains Mono',monospace;
+  --bk:#000;--wh:#fff;
+  --g1:#070707;--g2:#0f0f0f;--g3:#181818;--g4:#252525;--g5:#383838;--g6:#666;--g7:#999;--g8:#ccc;
+  --cyan:#00e5ff;--green:#39ff9a;--amber:#ffb800;--red:#ff4040;--purple:#c084fc;--blue:#60a5fa;--teal:#2dd4bf;
+  --fd:'Bebas Neue',sans-serif;--fc:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;--fm:'JetBrains Mono',monospace;
 }
 html{scroll-behavior:smooth;overflow-x:hidden}
-body{background:var(--black);color:var(--white);font-family:var(--fb);font-weight:300;line-height:1.6;overflow-x:hidden}
+body{background:var(--bk);color:var(--wh);font-family:var(--fb);font-weight:300;overflow-x:hidden}
 ::-webkit-scrollbar{width:2px}::-webkit-scrollbar-track{background:#000}::-webkit-scrollbar-thumb{background:var(--g5)}
-a{text-decoration:none}
+a{text-decoration:none;color:inherit}img{max-width:100%}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5vw;height:62px;display:flex;align-items:center;justify-content:space-between;transition:background .4s}
-nav.solid{background:rgba(0,0,0,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--g3)}
-.logo{font-family:var(--fd);font-size:1.55rem;letter-spacing:.14em;color:var(--white)}
-.logo em{color:var(--accent);font-style:normal}
-.nav-links{display:flex;gap:2.2rem;list-style:none}
-.nav-links a{font-family:var(--fc);font-size:.78rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--g7);transition:color .2s}
-.nav-links a:hover{color:var(--white)}
-.nav-cta{font-family:var(--fc);font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:1px solid rgba(255,255,255,.4);padding:.42rem 1.3rem;color:var(--white);transition:all .2s}
-.nav-cta:hover{background:var(--white);color:var(--black)}
+/* ─── NAV ─────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;height:62px;display:flex;align-items:center;padding:0 5vw;justify-content:space-between;transition:all .4s}
+nav.on{background:rgba(0,0,0,.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.07)}
+.logo{font-family:var(--fd);font-size:1.55rem;letter-spacing:.15em}.logo b{color:var(--cyan);font-weight:400}
+.nl{display:flex;gap:1.8rem;list-style:none}
+.nl a{font-family:var(--fc);font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--g7);transition:color .2s}
+.nl a:hover{color:var(--wh)}
+.ncta{font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--cyan);color:var(--bk);padding:.4rem 1.2rem;transition:background .2s;cursor:pointer}
+.ncta:hover{background:var(--wh)}
 
-/* HERO */
-.hero{position:relative;height:100vh;min-height:700px;display:flex;align-items:center;justify-content:flex-start;overflow:hidden}
-canvas#stars{position:absolute;inset:0;width:100%;height:100%}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,.03)1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.03)1px,transparent 1px);background-size:72px 72px;opacity:0;animation:gf 3s 1s ease forwards}
-@keyframes gf{to{opacity:1}}
-.hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 25%,rgba(0,0,0,.75)100%)}
-.hero-fade{position:absolute;bottom:0;left:0;right:0;height:280px;background:linear-gradient(to top,#000 0%,transparent 100%)}
-.hero-content{position:relative;z-index:2;padding:0 5vw;max-width:1300px;width:100%;margin-top:62px}
-.hero-eye{font-family:var(--fc);font-size:.72rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:1.4rem;opacity:0;animation:fu .7s .5s ease forwards;display:block;line-height:1.4}
-.hero-h1{font-family:var(--fd);font-size:clamp(3rem,8vw,8rem);line-height:.93;letter-spacing:.025em;margin-bottom:1.8rem;opacity:0;animation:fu .8s .7s ease forwards}
-.hero-h1 em{color:var(--accent);font-style:normal}
-.hero-sub{font-family:var(--fc);font-size:clamp(1rem,2vw,1.4rem);font-weight:300;color:var(--g7);max-width:560px;letter-spacing:.03em;line-height:1.55;margin-bottom:2.8rem;opacity:0;animation:fu .8s .9s ease forwards}
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fu .8s 1.1s ease forwards}
-.btn-w{font-family:var(--fc);font-size:.82rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;background:var(--white);color:var(--black);padding:.82rem 2.2rem;display:inline-flex;align-items:center;gap:.5rem;transition:all .22s}
-.btn-w:hover{background:var(--accent);color:var(--black)}
-.btn-o{font-family:var(--fc);font-size:.82rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(255,255,255,.3);color:var(--white);padding:.82rem 2.2rem;transition:all .22s}
-.btn-o:hover{border-color:var(--white);background:rgba(255,255,255,.06)}
-.hero-si{position:absolute;bottom:2.5rem;right:5vw;z-index:2;display:flex;flex-direction:column;align-items:center;gap:.45rem;opacity:0;animation:fi 1s 1.8s ease forwards}
-.hsi-line{width:1px;height:52px;background:linear-gradient(to bottom,var(--g6),transparent);animation:sp 2s infinite}
-@keyframes sp{0%,100%{opacity:.25}50%{opacity:1}}
-.hsi-txt{font-family:var(--fc);font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--g6);writing-mode:vertical-rl}
-@keyframes fu{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+/* ─── HERO ────────────────────────────────────── */
+.hero{position:relative;height:100vh;min-height:720px;display:flex;align-items:center;overflow:hidden}
+#sc{position:absolute;inset:0;width:100%;height:100%}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,.02)1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.02)1px,transparent 1px);background-size:60px 60px}
+.hvig{position:absolute;inset:0;background:radial-gradient(ellipse 120% 80% at 60% 50%,rgba(0,229,255,.05) 0%,transparent 55%)}
+.hfade{position:absolute;bottom:0;left:0;right:0;height:300px;background:linear-gradient(to top,#000,transparent)}
+.hc{position:relative;z-index:2;padding:0 5vw;margin-top:62px;max-width:1400px;width:100%}
+.heye{font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--cyan);margin-bottom:1.4rem;opacity:0;animation:fu .6s .3s ease forwards}
+.hh1{font-family:var(--fd);font-size:clamp(3rem,7.5vw,8rem);line-height:.91;letter-spacing:.02em;margin-bottom:2rem;opacity:0;animation:fu .8s .5s ease forwards}
+.hh1 em{color:var(--cyan);font-style:normal;display:block}
+.hsub{font-family:var(--fc);font-size:clamp(.95rem,1.7vw,1.3rem);font-weight:300;color:var(--g7);max-width:500px;line-height:1.65;margin-bottom:3rem;opacity:0;animation:fu .8s .7s ease forwards}
+.hbtns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fu .8s .9s ease forwards}
+.bs{font-family:var(--fc);font-size:.78rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:var(--wh);color:var(--bk);padding:.78rem 2rem;display:inline-flex;align-items:center;gap:.5rem;transition:all .2s}
+.bs:hover{background:var(--cyan)}
+.bg{font-family:var(--fc);font-size:.78rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:1px solid rgba(255,255,255,.25);color:var(--wh);padding:.78rem 2rem;transition:all .2s}
+.bg:hover{border-color:var(--wh);background:rgba(255,255,255,.05)}
+.hscr{position:absolute;bottom:2.5rem;right:5vw;z-index:2;display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:0;animation:fi 1s 1.6s forwards}
+.hscrl{width:1px;height:48px;background:linear-gradient(to bottom,var(--g6),transparent);animation:spp 2s infinite}
+.hscrt{font-family:var(--fc);font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--g6);writing-mode:vertical-rl}
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @keyframes fi{from{opacity:0}to{opacity:1}}
+@keyframes spp{0%,100%{opacity:.2}50%{opacity:.9}}
 
-/* STATS */
-.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--g3);border-bottom:1px solid var(--g3);background:var(--g1)}
-.stat{padding:2.2rem 0;text-align:center;border-right:1px solid var(--g3)}
-.stat:last-child{border-right:none}
-.stat-n{font-family:var(--fd);font-size:clamp(2rem,4vw,3rem);line-height:1;color:var(--white)}
-.stat-n em{color:var(--accent);font-style:normal}
-.stat-l{font-family:var(--fc);font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--g6);margin-top:.35rem}
+/* ─── STATS ───────────────────────────────────── */
+.statsbar{display:grid;grid-template-columns:repeat(4,1fr);background:var(--g1);border-top:1px solid var(--g4);border-bottom:1px solid var(--g4)}
+.st{padding:2.2rem 0;text-align:center;border-right:1px solid var(--g4)}.st:last-child{border-right:none}
+.stnum{font-family:var(--fd);font-size:clamp(1.8rem,3.5vw,2.8rem);line-height:1}.stnum em{color:var(--cyan);font-style:normal}
+.stlbl{font-family:var(--fc);font-size:.64rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--g6);margin-top:.35rem}
 
-/* SHARED */
+/* ─── SHARED ──────────────────────────────────── */
 section{padding:110px 5vw}
-.eye{font-family:var(--fc);font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:.9rem}
-.sh1{font-family:var(--fd);font-size:clamp(2.4rem,5.5vw,5.2rem);letter-spacing:.03em;line-height:.93;margin-bottom:1.4rem}
-.sbody{font-size:1.02rem;font-weight:300;color:var(--g7);max-width:600px;line-height:1.78}
-
-/* PROBLEM */
-.problem-wrap{display:grid;grid-template-columns:1fr 1fr;gap:7vw;align-items:center}
-.pcard{border:1px solid var(--g4);padding:1.6rem;position:relative;overflow:hidden;margin-bottom:1.2rem;transition:border-color .25s}
-.pcard:hover{border-color:var(--g5)}
-.pcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
-.pcard.bad::before{background:var(--red)}
-.pcard.good::before{background:var(--accent2)}
-.pcard-tag{font-family:var(--fc);font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--g6);margin-bottom:.4rem}
-.pcard-title{font-family:var(--fc);font-size:1.05rem;font-weight:600;letter-spacing:.04em;color:var(--white);margin-bottom:.35rem}
-.pcard-body{font-size:.86rem;color:var(--g6);line-height:1.62}
-.vs{display:flex;align-items:center;gap:1.2rem;margin:1rem 0}
-.vs::before,.vs::after{content:'';flex:1;height:1px;background:var(--g4)}
-.vs span{font-family:var(--fd);font-size:1.5rem;color:var(--g5)}
-
-/* HOW */
-.how-bg{background:var(--g1)}
-.how-steps{display:grid;grid-template-columns:repeat(4,1fr);margin-top:4.5rem;border:1px solid var(--g4)}
-.hstep{padding:2.2rem 1.8rem;border-right:1px solid var(--g4);position:relative;transition:background .25s}
-.hstep:last-child{border-right:none}
-.hstep:hover{background:var(--g3)}
-.hstep-n{font-family:var(--fd);font-size:3.8rem;color:var(--g4);line-height:1;margin-bottom:1rem}
-.hstep-title{font-family:var(--fc);font-size:.9rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--white);margin-bottom:.7rem}
-.hstep-body{font-size:.84rem;color:var(--g6);line-height:1.68}
-.hstep-dot{position:absolute;top:50%;right:0;transform:translate(50%,-50%);width:9px;height:9px;background:var(--accent);border-radius:50%;box-shadow:0 0 10px var(--accent)}
-.hstep:last-child .hstep-dot{display:none}
-
-/* SCENARIO */
-.flow-table{width:100%;border-collapse:collapse;margin-top:4rem;border:1px solid var(--g4)}
-.flow-table th{font-family:var(--fc);font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--g5);padding:.9rem 1.3rem;border-bottom:1px solid var(--g4);text-align:left;background:var(--g2)}
-.flow-table td{padding:1.3rem;border-bottom:1px solid var(--g3);vertical-align:top;font-size:.84rem;line-height:1.65}
-.flow-table tr:last-child td{border-bottom:none}
-.flow-table tr:hover td{background:rgba(255,255,255,.02)}
-.actor-cell{white-space:nowrap;width:120px}
-.role-pill{font-family:var(--fc);font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.22rem .7rem;border-radius:2px;display:inline-block}
-.rp-dev{background:rgba(59,130,246,.15);color:#60a5fa}
-.rp-cursor{background:rgba(0,229,255,.12);color:var(--accent)}
-.rp-swap{background:rgba(127,255,178,.12);color:var(--accent2)}
-.rp-sys{background:rgba(255,170,0,.12);color:var(--warn)}
-.ev-title{font-family:var(--fc);font-size:.88rem;font-weight:600;letter-spacing:.04em;color:var(--white);display:block;margin-bottom:.3rem}
-.ev-body{color:var(--g7)}
-.ctx{font-family:var(--fm);font-size:.74rem;color:var(--g6);line-height:1.75}
-.ctx .why{color:var(--accent2)}
-.ctx .risk{color:var(--red)}
-.ctx .info{color:var(--g8)}
-
-/* MEMORY RECORDS */
-.records-bg{background:var(--g1)}
-.records-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.3rem;margin-top:4rem}
-.rec{border:1px solid var(--g4);overflow:hidden;transition:all .25s}
-.rec:hover{border-color:var(--g5);transform:translateY(-2px)}
-.rec-hdr{padding:.9rem 1.3rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--g4)}
-.rec-type{font-family:var(--fc);font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:.2rem .6rem}
-.rt-d{background:rgba(0,229,255,.1);color:var(--accent)}
-.rt-r{background:rgba(255,64,64,.1);color:var(--red)}
-.rt-b{background:rgba(255,107,53,.1);color:var(--coral)}
-.rt-c{background:rgba(127,255,178,.1);color:var(--accent2)}
-.rec-conf{font-family:var(--fm);font-size:.62rem;color:var(--g6)}
-.rec-title{padding:.9rem 1.3rem;font-family:var(--fc);font-size:.98rem;font-weight:600;letter-spacing:.04em;color:var(--white);border-bottom:1px solid var(--g4)}
-.rec-what,.rec-why{padding:.75rem 1.3rem}
-.rec-what{border-bottom:1px solid var(--g3)}
-.rec-fl{font-family:var(--fc);font-size:.58rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;display:block;margin-bottom:.25rem}
-.rec-what .rec-fl{color:var(--g5)}
-.rec-why .rec-fl{color:rgba(127,255,178,.5)}
-.rec-what p{font-size:.81rem;color:var(--g6);line-height:1.58}
-.rec-why p{font-size:.81rem;color:var(--accent2);line-height:1.58}
-.rec-meta{padding:.65rem 1.3rem;font-family:var(--fm);font-size:.62rem;color:var(--g5);display:flex;gap:1.2rem;flex-wrap:wrap}
-
-/* INTEGRATION */
-.int-bg{background:var(--black);position:relative;overflow:hidden}
-.int-wm{position:absolute;font-family:var(--fd);font-size:22vw;color:rgba(255,255,255,.013);white-space:nowrap;top:50%;transform:translateY(-50%);pointer-events:none;letter-spacing:.06em;user-select:none}
-.int-layout{display:grid;grid-template-columns:1fr 1fr;gap:7vw;align-items:start;position:relative;z-index:1}
-.code-card{background:var(--g2);border:1px solid var(--g4);margin-bottom:1.2rem}
-.cc-hdr{padding:.9rem 1.3rem;border-bottom:1px solid var(--g4);display:flex;align-items:center;gap:.5rem}
-.cd{width:9px;height:9px;border-radius:50%}
-.cf{font-family:var(--fm);font-size:.68rem;color:var(--g6);margin-left:auto}
-.cc-body{padding:1.5rem;font-family:var(--fm);font-size:.76rem;line-height:1.85;color:var(--g7)}
-.c-cmt{color:var(--g5)}.c-k{color:var(--accent)}.c-s{color:var(--accent2)}.c-kw{color:#c792ea}.c-n{color:var(--warn)}
-.int-steps{margin-top:2.5rem;display:flex;flex-direction:column;gap:1.8rem}
-.istep{display:flex;gap:1.1rem;align-items:flex-start}
-.istep-n{font-family:var(--fd);font-size:2.2rem;color:var(--g5);line-height:1;flex-shrink:0;width:2.6rem}
-.istep-title{font-family:var(--fc);font-size:.95rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--white);margin-bottom:.3rem}
-.istep-body{font-size:.86rem;color:var(--g6);line-height:1.65}
-
-/* VIBE CODING */
-.vibe-bg{background:var(--g1)}
-.vibe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:4rem}
-.vcard{border:1px solid var(--g4);padding:2.2rem;position:relative;overflow:hidden;transition:border-color .25s}
-.vcard:hover{border-color:var(--g5)}
-.vcard-bg-n{position:absolute;font-family:var(--fd);font-size:6rem;color:rgba(255,255,255,.03);top:.3rem;right:.8rem;line-height:1;pointer-events:none}
-.vtag{font-family:var(--fc);font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:.2rem .7rem;display:inline-block;margin-bottom:1.3rem}
-.vtag-now{background:rgba(127,255,178,.1);color:var(--accent2)}
-.vtag-s2{background:rgba(0,229,255,.1);color:var(--accent)}
-.vtag-key{background:rgba(255,170,0,.1);color:var(--warn)}
-.vcard-title{font-family:var(--fc);font-size:1.1rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--white);margin-bottom:.9rem;line-height:1.2}
-.vcard-body{font-size:.86rem;color:var(--g6);line-height:1.72;margin-bottom:1.3rem}
-.vcode{background:var(--black);border:1px solid var(--g4);padding:.9rem 1.1rem;font-family:var(--fm);font-size:.7rem;color:var(--g7);line-height:1.75}
-.vcode .cmd{color:var(--accent)}.vcode .cmt{color:var(--g5)}
-
-/* COMPARE */
-.cmp-bg{background:var(--black)}
-.cmp-table{width:100%;border-collapse:collapse;margin-top:4rem;border:1px solid var(--g4)}
-.cmp-table th{font-family:var(--fc);font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:1rem 1.3rem;border-bottom:1px solid var(--g4);text-align:left;color:var(--g5)}
-.cmp-table th.hl{color:var(--accent);background:rgba(0,229,255,.06)}
-.cmp-table td{padding:1.1rem 1.3rem;border-bottom:1px solid var(--g3);font-size:.86rem;color:var(--g6)}
-.cmp-table tr:last-child td{border-bottom:none}
-.cmp-table td.feat{color:var(--g8)}
-.td-y{color:var(--accent2)}.td-n{color:var(--g4)}.td-p{color:var(--warn)}
-.sc-col{background:rgba(0,229,255,.025)!important;border-left:1px solid rgba(0,229,255,.15)!important;border-right:1px solid rgba(0,229,255,.15)!important;color:var(--white)!important;font-weight:500}
-
-/* PRICING */
-.price-bg{background:var(--g1)}
-.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:4rem}
-.plan{border:1px solid var(--g4);padding:2.2rem;position:relative;transition:border-color .25s}
-.plan:hover{border-color:var(--g5)}
-.plan.feat{border-color:var(--accent)}
-.plan-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-family:var(--fc);font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;background:var(--accent);color:var(--black);padding:.18rem .9rem;white-space:nowrap}
-.plan-name{font-family:var(--fc);font-size:.75rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--g6);margin-bottom:.75rem}
-.plan-price{font-family:var(--fd);font-size:2.8rem;line-height:1;letter-spacing:.02em;margin-bottom:.25rem}
-.plan-price sub{font-family:var(--fc);font-size:.8rem;color:var(--g6);font-weight:400;vertical-align:middle}
-.plan-period{font-size:.82rem;color:var(--g6);margin-bottom:1.8rem;padding-bottom:1.8rem;border-bottom:1px solid var(--g4)}
-.plan-feats{list-style:none;display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem}
-.plan-feats li{font-size:.84rem;color:var(--g7);display:flex;align-items:flex-start;gap:.65rem;line-height:1.5}
-.plan-feats li::before{content:'›';color:var(--accent);font-size:1rem;line-height:1;flex-shrink:0}
-.plan-btn{display:block;text-align:center;font-family:var(--fc);font-size:.76rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:.85rem;border:1px solid var(--g5);color:var(--white);transition:all .2s}
-.plan-btn:hover{border-color:var(--white);background:rgba(255,255,255,.05)}
-.plan.feat .plan-btn{background:var(--accent);border-color:var(--accent);color:var(--black)}
-.plan.feat .plan-btn:hover{background:#33ecff}
-
-/* TEAM */
-.team-bg{background:var(--black);position:relative;overflow:hidden}
-.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem}
-.tmember{border:1px solid var(--g4);overflow:hidden;transition:all .3s}
-.tmember:hover{border-color:var(--g5);transform:translateY(-3px)}
-.tmember-avatar{height:280px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.av-initials{font-family:var(--fd);font-size:5rem;letter-spacing:.08em;line-height:1;position:relative;z-index:1}
-.av-bg{position:absolute;inset:0;opacity:.1}
-.av-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05)1px,transparent 1px);background-size:28px 28px}
-.av-1{background:linear-gradient(135deg,#0a1e14 0%,#0d2e1e 100%)}
-.av-1 .av-initials{color:var(--accent2)}
-.av-1 .av-bg{background:radial-gradient(circle at 50% 60%,rgba(127,255,178,.3),transparent 65%)}
-.av-2{background:linear-gradient(135deg,#0a1628 0%,#0d2444 100%)}
-.av-2 .av-initials{color:#60a5fa}
-.av-2 .av-bg{background:radial-gradient(circle at 50% 60%,rgba(0,229,255,.3),transparent 65%)}
-.av-3{background:linear-gradient(135deg,#1e1208 0%,#2e1c0a 100%)}
-.av-3 .av-initials{color:var(--warn)}
-.av-3 .av-bg{background:radial-gradient(circle at 50% 60%,rgba(255,170,0,.28),transparent 65%)}
-.tm-role{font-family:var(--fc);font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:.9rem 1.4rem;border-bottom:1px solid var(--g4)}
-.role-ceo{color:var(--accent2)}
-.role-cto{color:#60a5fa}
-.role-cfo{color:var(--warn)}
-.tm-name{font-family:var(--fc);font-size:1.25rem;font-weight:600;letter-spacing:.06em;color:var(--white);padding:.9rem 1.4rem .5rem}
-.tm-bio{font-size:.84rem;color:var(--g6);line-height:1.68;padding:0 1.4rem 1.4rem}
-.tm-tag{font-family:var(--fm);font-size:.65rem;color:var(--g5);padding:.65rem 1.4rem;border-top:1px solid var(--g4)}
-
-/* CTA */
-.cta-wrap{background:var(--black);text-align:center;padding:150px 5vw;position:relative;overflow:hidden}
-.cta-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(0,229,255,.06) 0%,transparent 60%)}
-.cta-h{font-family:var(--fd);font-size:clamp(3rem,8vw,7rem);letter-spacing:.04em;margin-bottom:1.3rem;position:relative;z-index:1}
-.cta-sub{font-family:var(--fc);font-size:1.15rem;color:var(--g7);margin-bottom:2.8rem;letter-spacing:.04em;position:relative;z-index:1}
-.cta-btns{display:flex;gap:1rem;justify-content:center;position:relative;z-index:1;flex-wrap:wrap}
-
-/* FOOTER */
-footer{background:var(--g2);border-top:1px solid var(--g4);padding:4rem 5vw 2.5rem}
-.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3.5rem;margin-bottom:2.5rem}
-.foot-brand{font-family:var(--fd);font-size:1.9rem;letter-spacing:.1em;margin-bottom:.9rem}
-.foot-brand em{color:var(--accent);font-style:normal}
-.foot-tagline{font-size:.86rem;color:var(--g6);max-width:220px;line-height:1.68}
-.foot-col h4{font-family:var(--fc);font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--g5);margin-bottom:1.1rem}
-.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:.65rem}
-.foot-col a{font-size:.86rem;color:var(--g6);transition:color .2s}
-.foot-col a:hover{color:var(--white)}
-.foot-btm{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;border-top:1px solid var(--g4);font-family:var(--fc);font-size:.68rem;letter-spacing:.1em;color:var(--g5)}
-
-/* REVEAL */
+.seye{font-family:var(--fc);font-size:.68rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--cyan);margin-bottom:.9rem}
+.sh1{font-family:var(--fd);font-size:clamp(2.2rem,5vw,4.8rem);letter-spacing:.03em;line-height:.93;margin-bottom:1.4rem}
+.sbody{font-size:1rem;font-weight:300;color:var(--g7);max-width:580px;line-height:1.8}
 .rv{opacity:0;transform:translateY(28px);transition:opacity .75s ease,transform .75s ease}
 .rv.vis{opacity:1;transform:none}
-.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+.hr{border:none;border-bottom:1px solid var(--g4);margin:0}
 
-/* RESPONSIVE */
+/* ─── PROBLEM ─────────────────────────────────── */
+.problem{background:var(--bk)}
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:8vw;align-items:center;margin-top:4rem}
+.pcard{border:1px solid var(--g4);padding:1.6rem;margin-bottom:1.1rem;position:relative;transition:border-color .25s}
+.pcard:hover{border-color:var(--g5)}
+.pcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red);opacity:.7}
+.pcard.ok::before{background:var(--green)}
+.ptag{font-family:var(--fc);font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--g6);margin-bottom:.35rem}
+.ptitle{font-family:var(--fc);font-size:1rem;font-weight:600;letter-spacing:.04em;color:var(--wh);margin-bottom:.3rem}
+.pbody{font-size:.85rem;color:var(--g6);line-height:1.65}
+.vsep{display:flex;align-items:center;gap:1rem;margin:1.2rem 0}.vsep::before,.vsep::after{content:'';flex:1;height:1px;background:var(--g4)}
+.vsep span{font-family:var(--fd);font-size:1.4rem;color:var(--g5)}
+
+/* ─── MEMORY LAYER DIAGRAM ────────────────────── */
+.memory-section{background:var(--g1);overflow:hidden}
+.mem-diagram{margin-top:4rem;position:relative}
+.mem-layers{display:flex;flex-direction:column;gap:0;border:1px solid var(--g4);position:relative;overflow:hidden}
+.mem-layer{display:grid;grid-template-columns:180px 1fr;border-bottom:1px solid var(--g4);position:relative;transition:background .3s;cursor:default}
+.mem-layer:last-child{border-bottom:none}
+.mem-layer:hover{background:rgba(255,255,255,.02)}
+.mem-layer-label{padding:2rem 1.8rem;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--g4);position:relative}
+.mem-layer-num{font-family:var(--fd);font-size:2.8rem;line-height:1;margin-bottom:.3rem;opacity:.15}
+.mem-layer-name{font-family:var(--fc);font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.mem-layer-body{padding:1.8rem 2.2rem;display:flex;flex-wrap:wrap;gap:.8rem;align-items:center}
+/* layer accent colours */
+.lyr1 .mem-layer-num,.lyr1 .mem-layer-name{color:var(--cyan)}
+.lyr1{border-left:3px solid var(--cyan)}
+.lyr2 .mem-layer-num,.lyr2 .mem-layer-name{color:var(--green)}
+.lyr2{border-left:3px solid var(--green)}
+.lyr3 .mem-layer-num,.lyr3 .mem-layer-name{color:var(--purple)}
+.lyr3{border-left:3px solid var(--purple)}
+.lyr4 .mem-layer-num,.lyr4 .mem-layer-name{color:var(--amber)}
+.lyr4{border-left:3px solid var(--amber)}
+/* tool chips inside layers */
+.chip{font-family:var(--fc);font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .8rem;border:1px solid var(--g4);color:var(--g7);transition:all .25s;white-space:nowrap}
+.chip:hover{border-color:currentColor;color:var(--wh)}
+.chip.cyan{border-color:rgba(0,229,255,.3);color:var(--cyan)}
+.chip.green{border-color:rgba(57,255,154,.3);color:var(--green)}
+.chip.purple{border-color:rgba(192,132,252,.3);color:var(--purple)}
+.chip.amber{border-color:rgba(255,184,0,.3);color:var(--amber)}
+.chip.blue{border-color:rgba(96,165,250,.3);color:var(--blue)}
+/* flow arrow between layers */
+.mem-arrow{text-align:center;padding:.6rem;color:var(--g5);font-size:1.2rem;border-bottom:1px solid var(--g4)}
+/* memory record sample */
+.mem-record{background:var(--g2);border:1px solid var(--g4);padding:1.2rem 1.5rem;margin-top:2rem;position:relative;overflow:hidden}
+.mem-record::before{content:'MemoryRecord';position:absolute;top:.5rem;right:1rem;font-family:var(--fm);font-size:.6rem;color:var(--g5)}
+.mr-row{display:flex;gap:1rem;margin-bottom:.5rem;align-items:flex-start}
+.mr-key{font-family:var(--fm);font-size:.72rem;color:var(--cyan);min-width:110px;flex-shrink:0}
+.mr-val{font-family:var(--fm);font-size:.72rem;color:var(--g8);line-height:1.5}
+.mr-val.why{color:var(--green)}
+.mr-val.tag{color:var(--purple)}
+
+/* ─── STAGES ──────────────────────────────────── */
+.stages-section{background:var(--bk)}
+.stages-header{max-width:700px;margin-bottom:5rem}
+.stages-timeline{position:relative;padding-left:3rem}
+.stages-timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--cyan),var(--purple),var(--amber))}
+.stage-block{position:relative;margin-bottom:5rem;padding-bottom:5rem;border-bottom:1px solid var(--g4)}
+.stage-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.stage-dot{position:absolute;left:-3.3rem;top:.2rem;width:12px;height:12px;border-radius:50%;border:2px solid currentColor;background:var(--bk)}
+.stage-dot.s1{color:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+.stage-dot.s2{color:var(--purple);box-shadow:0 0 14px var(--purple)}
+.stage-dot.s3{color:var(--amber);box-shadow:0 0 14px var(--amber)}
+.stage-meta{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.stage-tag{font-family:var(--fc);font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:.22rem .7rem;border:1px solid currentColor}
+.stage-tag.s1{color:var(--cyan)}
+.stage-tag.s2{color:var(--purple)}
+.stage-tag.s3{color:var(--amber)}
+.stage-months{font-family:var(--fm);font-size:.68rem;color:var(--g6)}
+.stage-name{font-family:var(--fd);font-size:clamp(1.8rem,4vw,3.5rem);letter-spacing:.04em;line-height:.95;margin-bottom:1rem}
+.stage-desc{font-size:.95rem;color:var(--g7);max-width:680px;line-height:1.8;margin-bottom:2rem}
+.stage-features{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:2.5rem}
+.sfeat{border:1px solid var(--g4);padding:1.2rem;transition:border-color .25s}
+.sfeat:hover{border-color:var(--g5)}
+.sfeat-title{font-family:var(--fc);font-size:.85rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.sfeat-body{font-size:.8rem;color:var(--g6);line-height:1.6}
+.s1 .sfeat-title{color:var(--cyan)}
+.s2 .sfeat-title{color:var(--purple)}
+.s3 .sfeat-title{color:var(--amber)}
+.stage-principle{background:var(--g2);border-left:3px solid currentColor;padding:1rem 1.4rem;font-size:.85rem;color:var(--g8);line-height:1.65;max-width:680px}
+.stage-principle strong{font-weight:500;color:var(--wh);font-family:var(--fc);font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:.3rem}
+.sp1{border-color:var(--cyan)}.sp2{border-color:var(--purple)}.sp3{border-color:var(--amber)}
+
+/* ─── INTEGRATIONS ────────────────────────────── */
+.int-section{background:var(--g1)}
+.int-cats{display:flex;flex-direction:column;gap:2.5rem;margin-top:4rem}
+.icat-name{font-family:var(--fc);font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--g6);margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid var(--g4)}
+.icat-chips{display:flex;flex-wrap:wrap;gap:.6rem}
+.itool{font-family:var(--fc);font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .9rem;border:1px solid var(--g4);color:var(--g7);transition:all .25s;cursor:default}
+.itool:hover{border-color:var(--g7);color:var(--wh)}
+.itool.new{border-color:rgba(0,229,255,.3);color:var(--cyan)}
+
+/* ─── ARCHITECTURE DIAGRAM ────────────────────── */
+.arch-section{background:var(--g1);overflow:hidden}
+.arch-diagram{margin-top:4rem;position:relative}
+/* pipeline track */
+.pipeline{display:flex;flex-direction:column;gap:0;position:relative}
+.pipeline::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--cyan) 0%,var(--purple) 50%,var(--amber) 100%);opacity:.3;transform:translateX(-50%)}
+/* each pipeline row */
+.prow{display:grid;grid-template-columns:1fr 80px 1fr;align-items:center;margin-bottom:0;position:relative;z-index:1}
+.prow-left{display:flex;justify-content:flex-end}
+.prow-right{display:flex;justify-content:flex-start}
+.prow-mid{display:flex;flex-direction:column;align-items:center;gap:4px}
+.prow-arrow{width:1px;height:40px;background:linear-gradient(to bottom,currentColor,transparent);opacity:.5;margin:0 auto}
+.prow-arrow.up{background:linear-gradient(to top,currentColor,transparent)}
+.prow-dot{width:10px;height:10px;border-radius:50%;border:2px solid currentColor;background:var(--g1)}
+/* node cards */
+.anode{padding:1.1rem 1.4rem;border:1px solid var(--g4);max-width:280px;width:100%;transition:all .3s;cursor:default;position:relative;overflow:hidden}
+.anode:hover{border-color:var(--g5);transform:translateY(-2px)}
+.anode::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.an-cyan::before{background:var(--cyan)}
+.an-green::before{background:var(--green)}
+.an-purple::before{background:var(--purple)}
+.an-amber::before{background:var(--amber)}
+.an-red::before{background:var(--red)}
+.an-blue::before{background:var(--blue)}
+.an-teal::before{background:var(--teal)}
+.an-label{font-family:var(--fc);font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.35rem}
+.an-cyan .an-label{color:var(--cyan)}
+.an-green .an-label{color:var(--green)}
+.an-purple .an-label{color:var(--purple)}
+.an-amber .an-label{color:var(--amber)}
+.an-red .an-label{color:var(--red)}
+.an-blue .an-label{color:var(--blue)}
+.an-teal .an-label{color:var(--teal)}
+.an-title{font-family:var(--fc);font-size:.92rem;font-weight:600;letter-spacing:.04em;color:var(--wh);margin-bottom:.3rem}
+.an-body{font-size:.75rem;color:var(--g6);line-height:1.55}
+/* swapcore center band */
+.sc-band{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.15);padding:1.8rem 2rem;margin:2.5rem 0;text-align:center;position:relative}
+.sc-band-title{font-family:var(--fd);font-size:2rem;letter-spacing:.1em;color:var(--cyan);margin-bottom:.4rem}
+.sc-band-sub{font-family:var(--fc);font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--g6)}
+/* agents row */
+.agents-row{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin:2rem 0}
+.agent-card{border:1px solid var(--g4);padding:1.1rem;text-align:center;transition:all .3s;position:relative;overflow:hidden}
+.agent-card:hover{border-color:var(--g5);transform:translateY(-2px)}
+.agent-card::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s}
+.agent-card:hover::after{opacity:.04;background:var(--cyan)}
+.ac-num{font-family:var(--fd);font-size:2rem;line-height:1;margin-bottom:.4rem;opacity:.2}
+.ac-stage{font-family:var(--fc);font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:.15rem .5rem;margin-bottom:.5rem;display:inline-block}
+.acs1{background:rgba(0,229,255,.1);color:var(--cyan)}
+.acs2{background:rgba(192,132,252,.1);color:var(--purple)}
+.acs3{background:rgba(255,184,0,.1);color:var(--amber)}
+.ac-name{font-family:var(--fc);font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--wh);margin-bottom:.3rem}
+.ac-desc{font-size:.72rem;color:var(--g6);line-height:1.5}
+/* flow labels */
+.flow-lbl{font-family:var(--fm);font-size:.65rem;color:var(--g5);text-align:center;padding:.3rem .6rem;white-space:nowrap}
+/* section divider bands */
+.arch-band{background:var(--g2);border-top:1px solid var(--g4);border-bottom:1px solid var(--g4);padding:.6rem 0;text-align:center;font-family:var(--fc);font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--g5);margin:1.5rem 0}
+
+/* ─── CURSOR INTEGRATION ─────────────────────── */
+.cursor-section{background:var(--g1);overflow:hidden;position:relative}
+.cursor-wm{position:absolute;font-family:var(--fd);font-size:20vw;color:rgba(255,255,255,.012);white-space:nowrap;top:50%;transform:translateY(-50%);pointer-events:none;letter-spacing:.06em;user-select:none}
+.cursor-layout{display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:start;position:relative;z-index:1}
+.codecard{background:var(--g2);border:1px solid var(--g4);margin-bottom:1.2rem}
+.cchdr{padding:.9rem 1.2rem;border-bottom:1px solid var(--g4);display:flex;align-items:center;gap:.5rem}
+.cd{width:9px;height:9px;border-radius:50%}
+.cfn{font-family:var(--fm);font-size:.66rem;color:var(--g6);margin-left:auto}
+.ccbody{padding:1.4rem;font-family:var(--fm);font-size:.74rem;line-height:1.9;color:var(--g7)}
+.ck{color:var(--cyan)}.cs{color:var(--green)}.cc{color:var(--g5)}.ckw{color:var(--purple)}.cn{color:var(--amber)}
+.mcp-tools{display:flex;flex-direction:column;gap:1rem;margin-top:2rem}
+.mtool{display:grid;grid-template-columns:180px 1fr;border:1px solid var(--g4);transition:border-color .25s}
+.mtool:hover{border-color:var(--g5)}
+.mtool-name{padding:1rem 1.2rem;border-right:1px solid var(--g4);font-family:var(--fm);font-size:.7rem;color:var(--cyan);display:flex;align-items:center}
+.mtool-desc{padding:1rem 1.2rem;font-size:.82rem;color:var(--g6);line-height:1.55;display:flex;align-items:center}
+
+/* ─── COMPARE ─────────────────────────────────── */
+.cmp-section{background:var(--bk)}
+.ctable{width:100%;border-collapse:collapse;margin-top:4rem;border:1px solid var(--g4)}
+.ctable th{font-family:var(--fc);font-size:.66rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:.9rem 1.2rem;border-bottom:1px solid var(--g4);text-align:left;color:var(--g5)}
+.ctable th.hl{color:var(--cyan);background:rgba(0,229,255,.04)}
+.ctable td{padding:1rem 1.2rem;border-bottom:1px solid var(--g3);font-size:.84rem;color:var(--g6)}
+.ctable tr:last-child td{border-bottom:none}
+.ctable td.feat{color:var(--g8);font-weight:400}
+.ty{color:var(--green)}.tn{color:var(--g4)}.tp{color:var(--amber)}
+.sc{background:rgba(0,229,255,.025)!important;border-left:1px solid rgba(0,229,255,.15)!important;border-right:1px solid rgba(0,229,255,.15)!important;color:var(--wh)!important;font-weight:500}
+
+/* ─── PRICING ─────────────────────────────────── */
+.price-section{background:var(--g1)}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:4rem}
+.plan{border:1px solid var(--g4);padding:2.2rem;position:relative;transition:border-color .25s}
+.plan:hover{border-color:var(--g5)}
+.plan.feat{border-color:var(--cyan)}
+.pbadge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-family:var(--fc);font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;background:var(--cyan);color:var(--bk);padding:.16rem .8rem;white-space:nowrap}
+.pname{font-family:var(--fc);font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--g6);margin-bottom:.7rem}
+.pprice{font-family:var(--fd);font-size:2.8rem;line-height:1;letter-spacing:.02em;margin-bottom:.25rem}
+.pprice sub{font-family:var(--fc);font-size:.75rem;color:var(--g6);font-weight:400;vertical-align:middle}
+.pper{font-size:.8rem;color:var(--g6);margin-bottom:1.8rem;padding-bottom:1.8rem;border-bottom:1px solid var(--g4)}
+.pflts{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:2rem}
+.pflts li{font-size:.82rem;color:var(--g7);display:flex;gap:.6rem;line-height:1.5}
+.pflts li::before{content:'›';color:var(--cyan);font-size:.95rem;flex-shrink:0}
+.pbtn{display:block;text-align:center;font-family:var(--fc);font-size:.74rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:.82rem;border:1px solid var(--g5);color:var(--wh);transition:all .2s}
+.pbtn:hover{border-color:var(--wh);background:rgba(255,255,255,.05)}
+.plan.feat .pbtn{background:var(--cyan);border-color:var(--cyan);color:var(--bk)}
+.plan.feat .pbtn:hover{background:#33ecff}
+
+/* ─── TEAM ────────────────────────────────────── */
+.team-section{background:var(--bk)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem}
+.tmem{border:1px solid var(--g4);overflow:hidden;transition:all .3s}
+.tmem:hover{border-color:var(--g5);transform:translateY(-3px)}
+.tav{height:260px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.tav-init{font-family:var(--fd);font-size:5rem;letter-spacing:.08em;line-height:1;position:relative;z-index:1}
+.tav-bg{position:absolute;inset:0;opacity:.12}
+.tav-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04)1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04)1px,transparent 1px);background-size:24px 24px}
+.av1{background:linear-gradient(135deg,#0a1e14,#0d2e1e)}.av1 .tav-init{color:var(--green)}.av1 .tav-bg{background:radial-gradient(circle at 50% 60%,rgba(57,255,154,.4),transparent 65%)}
+.av2{background:linear-gradient(135deg,#0a1628,#0d2444)}.av2 .tav-init{color:var(--blue)}.av2 .tav-bg{background:radial-gradient(circle at 50% 60%,rgba(96,165,250,.4),transparent 65%)}
+.av3{background:linear-gradient(135deg,#1e1208,#2e1c0a)}.av3 .tav-init{color:var(--amber)}.av3 .tav-bg{background:radial-gradient(circle at 50% 60%,rgba(255,184,0,.35),transparent 65%)}
+.trole{font-family:var(--fc);font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:.85rem 1.3rem;border-bottom:1px solid var(--g4)}
+.rceo{color:var(--green)}.rcto{color:var(--blue)}.rcfo{color:var(--amber)}
+.tname{font-family:var(--fc);font-size:1.2rem;font-weight:600;letter-spacing:.05em;color:var(--wh);padding:.85rem 1.3rem .45rem}
+.tbio{font-size:.82rem;color:var(--g6);line-height:1.7;padding:0 1.3rem 1.3rem}
+.ttag{font-family:var(--fm);font-size:.62rem;color:var(--g5);padding:.6rem 1.3rem;border-top:1px solid var(--g4)}
+
+/* ─── CTA ─────────────────────────────────────── */
+.cta-section{background:var(--bk);text-align:center;padding:150px 5vw;position:relative;overflow:hidden}
+.cta-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(0,229,255,.06),transparent 60%)}
+.ctah{font-family:var(--fd);font-size:clamp(2.8rem,7.5vw,7rem);letter-spacing:.04em;margin-bottom:1.3rem;position:relative;z-index:1}
+.ctas{font-family:var(--fc);font-size:1.1rem;color:var(--g7);margin-bottom:2.8rem;letter-spacing:.04em;position:relative;z-index:1}
+.ctabtns{display:flex;gap:1rem;justify-content:center;position:relative;z-index:1;flex-wrap:wrap}
+
+/* ─── FOOTER ──────────────────────────────────── */
+footer{background:var(--g2);border-top:1px solid var(--g4);padding:4rem 5vw 2.5rem}
+.fg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3.5rem;margin-bottom:2.5rem}
+.fbrand{font-family:var(--fd);font-size:1.85rem;letter-spacing:.1em;margin-bottom:.85rem}.fbrand b{color:var(--cyan);font-weight:400}
+.ftagline{font-size:.84rem;color:var(--g6);max-width:210px;line-height:1.7}
+.fc4 h4{font-family:var(--fc);font-size:.66rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--g5);margin-bottom:1rem}
+.fc4 ul{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.fc4 a{font-size:.84rem;color:var(--g6);transition:color .2s}.fc4 a:hover{color:var(--wh)}
+.fbtm{display:flex;justify-content:space-between;align-items:center;padding-top:1.8rem;border-top:1px solid var(--g4);font-family:var(--fc);font-size:.66rem;letter-spacing:.1em;color:var(--g5)}
+
+/* ─── RESPONSIVE ──────────────────────────────── */
 @media(max-width:960px){
-  .problem-wrap,.int-layout{grid-template-columns:1fr}
-  .how-steps{grid-template-columns:repeat(2,1fr)}
-  .hstep:nth-child(2){border-right:none}.hstep{border-bottom:1px solid var(--g4)}
-  .stats-bar{grid-template-columns:repeat(2,1fr)}
-  .records-grid,.vibe-grid,.price-grid,.team-grid{grid-template-columns:1fr}
-  .foot-grid{grid-template-columns:1fr 1fr;gap:2rem}
-  .nav-links{display:none}
-  .flow-table th:last-child,.flow-table td:last-child{display:none}
+  .prob-grid,.cursor-layout{grid-template-columns:1fr}
+  .statsbar{grid-template-columns:repeat(2,1fr)}
+  .pgrid,.tgrid{grid-template-columns:1fr}
+  .fg{grid-template-columns:1fr 1fr;gap:2rem}
+  .nl{display:none}
+  .mem-layer{grid-template-columns:120px 1fr}
+  .agents-row{grid-template-columns:repeat(2,1fr)}
+  .ctable{font-size:.78rem}
+  .stage-features{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  section{padding:70px 5vw}
+  .stage-features{grid-template-columns:1fr}
+  .statsbar{grid-template-columns:1fr 1fr}
+  .mem-layer{grid-template-columns:1fr}
+  .mem-layer-label{border-right:none;border-bottom:1px solid var(--g4);padding:1.2rem}
+}
+
+/* ─── VIBE CODING EXAMPLE ─────────────────────── */
+.vibe-section{background:var(--g1);position:relative;overflow:hidden}
+.vibe-scenario{margin-top:4rem}
+.vs-intro{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-bottom:3.5rem;align-items:start}
+.vs-app-card{border:1px solid var(--g4);padding:2rem;position:relative;overflow:hidden}
+.vs-app-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--green),var(--purple))}
+.vac-tag{font-family:var(--fc);font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:.6rem}
+.vac-title{font-family:var(--fc);font-size:1.3rem;font-weight:700;letter-spacing:.05em;color:var(--wh);margin-bottom:.5rem}
+.vac-desc{font-size:.85rem;color:var(--g6);line-height:1.7;margin-bottom:1.2rem}
+.vac-stack{display:flex;flex-wrap:wrap;gap:.4rem}
+.vac-chip{font-family:var(--fm);font-size:.65rem;padding:.22rem .65rem;border:1px solid var(--g4);color:var(--g6)}
+/* session timeline */
+.session-timeline{display:flex;flex-direction:column;gap:0}
+.session{border:1px solid var(--g4);margin-bottom:1px;overflow:hidden;transition:all .3s}
+.session:hover{border-color:var(--g5)}
+.session-hdr{display:grid;grid-template-columns:90px 1fr auto;align-items:center;padding:1rem 1.4rem;cursor:pointer;gap:1rem;background:var(--g2)}
+.s-week{font-family:var(--fd);font-size:1.4rem;line-height:1;color:var(--g5)}
+.s-title{font-family:var(--fc);font-size:.92rem;font-weight:600;letter-spacing:.05em;color:var(--wh)}
+.s-date{font-family:var(--fm);font-size:.65rem;color:var(--g6);white-space:nowrap}
+.session-body{display:none;padding:0 1.4rem 1.4rem;background:var(--g2)}
+.session.open .session-body{display:block}
+.session.open .session-hdr{border-bottom:1px solid var(--g4)}
+/* conversation bubbles */
+.conv{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem}
+.cbubble{display:flex;gap:.8rem;align-items:flex-start}
+.cbubble.right{flex-direction:row-reverse}
+.cb-who{font-family:var(--fc);font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:.2rem .6rem;flex-shrink:0;margin-top:.15rem;white-space:nowrap}
+.cb-dev{background:rgba(96,165,250,.15);color:var(--blue)}
+.cb-cursor{background:rgba(0,229,255,.12);color:var(--cyan)}
+.cb-swap{background:rgba(57,255,154,.12);color:var(--green)}
+.cb-sys{background:rgba(255,184,0,.12);color:var(--amber)}
+.cb-text{font-size:.82rem;color:var(--g7);line-height:1.7;flex:1}
+.cb-text strong{color:var(--wh);font-weight:500}
+.cb-text code{font-family:var(--fm);font-size:.75rem;color:var(--cyan);background:rgba(0,229,255,.08);padding:.1rem .35rem}
+/* memory records inline */
+.inline-rec{background:var(--g3);border:1px solid var(--g4);border-left:3px solid var(--green);padding:.9rem 1.1rem;margin:.6rem 0;font-family:var(--fm);font-size:.72rem;line-height:1.8}
+.ir-type{color:var(--cyan);font-size:.6rem;text-transform:uppercase;letter-spacing:.15em;display:block;margin-bottom:.3rem}
+.ir-what{color:var(--g8);display:block}
+.ir-why{color:var(--green);display:block}
+/* session outcome pills */
+.s-outcomes{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--g4)}
+.s-out{font-family:var(--fc);font-size:.64rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:.2rem .7rem;border:1px solid var(--g4)}
+.so-mem{border-color:rgba(57,255,154,.3);color:var(--green)}
+.so-risk{border-color:rgba(255,64,64,.3);color:var(--red)}
+.so-dec{border-color:rgba(0,229,255,.3);color:var(--cyan)}
+.so-commit{border-color:rgba(192,132,252,.3);color:var(--purple)}
+/* compound value callout */
+.compound-box{background:var(--g2);border:1px solid var(--g4);border-top:2px solid var(--cyan);padding:2rem;margin-top:2.5rem}
+.cb-headline{font-family:var(--fc);font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:1rem}
+.cb-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.cbs{text-align:center;padding:1rem 0;border-right:1px solid var(--g4)}
+.cbs:last-child{border-right:none}
+.cbs-n{font-family:var(--fd);font-size:2.2rem;line-height:1;color:var(--wh)}
+.cbs-n em{color:var(--cyan);font-style:normal}
+.cbs-l{font-family:var(--fc);font-size:.62rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--g6);margin-top:.3rem}
+@media(max-width:960px){
+  .vs-intro{grid-template-columns:1fr}
+  .cb-stats{grid-template-columns:repeat(2,1fr)}
+  .session-hdr{grid-template-columns:60px 1fr auto}
 }
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav id="mainNav">
-  <a href="#" class="logo">SWAP<em>CORE</em></a>
-  <ul class="nav-links">
-    <li><a href="#how">How it works</a></li>
-    <li><a href="#scenario">Live example</a></li>
-    <li><a href="#integration">Integration</a></li>
-    <li><a href="#vibe">Vibe coding</a></li>
+<nav id="nav">
+  <a href="#" class="logo">SWAP<b>CORE</b></a>
+  <ul class="nl">
+    <li><a href="#stages">Stages</a></li>
+    <li><a href="#memory">Memory layer</a></li>
+    <li><a href="#integrations">Integrations</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#vibe-example">Vibe example</a></li><li><a href="#cursor">Cursor MCP</a></li>
     <li><a href="#team">Team</a></li>
     <li><a href="#pricing">Pricing</a></li>
   </ul>
-  <a href="#pricing" class="nav-cta">Request access</a>
+  <a href="mailto:hello@swapcore.io" class="ncta">Request access</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <canvas id="stars"></canvas>
-  <div class="hero-grid"></div>
-  <div class="hero-vignette"></div>
-  <div class="hero-fade"></div>
-  <div class="hero-content">
-    <div class="hero-eye">AI Development Intelligence Platform</div>
-    <h1 class="hero-h1">THE MEMORY<br>YOUR CODE<br><em>DESERVES</em></h1>
-    <p class="hero-sub">Git stores what changed. Jira stores what was planned. SWAPCORE stores why every decision was made — permanently, causally linked, queryable in 3 seconds.</p>
-    <div class="hero-btns">
-      <a href="#how" class="btn-w">
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v11M1 7l5.5 5.5L12 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        See how it works
+  <canvas id="sc"></canvas>
+  <div class="hgrid"></div>
+  <div class="hvig"></div>
+  <div class="hfade"></div>
+  <div class="hc">
+    <div class="heye">AI Development Intelligence Platform</div>
+    <h1 class="hh1">THE MEMORY<br>YOUR CODE<br><em>DESERVES</em></h1>
+    <p class="hsub">Git stores what changed. Jira stores what was planned. SWAPCORE stores why every decision was made — permanently, causally linked, queryable in 3 seconds.</p>
+    <div class="hbtns">
+      <a href="#stages" class="bs">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6.5l5 4.5 5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Explore all stages
       </a>
-      <a href="#integration" class="btn-o">Connect to Cursor →</a>
+      <a href="#cursor" class="bg">Connect to Cursor →</a>
     </div>
   </div>
-  <div class="hero-si">
-    <div class="hsi-line"></div>
-    <span class="hsi-txt">Scroll</span>
-  </div>
+  <div class="hscr"><div class="hscrl"></div><span class="hscrt">Scroll</span></div>
 </section>
 
 <!-- STATS -->
-<div class="stats-bar rv">
-  <div class="stat"><div class="stat-n">47<em>B</em></div><div class="stat-l">DevOps market TAM</div></div>
-  <div class="stat"><div class="stat-n">3<em>s</em></div><div class="stat-l">Context query time</div></div>
-  <div class="stat"><div class="stat-n">0</div><div class="stat-l">Workflow changes</div></div>
-  <div class="stat"><div class="stat-n">8<em>+</em></div><div class="stat-l">Tool integrations</div></div>
+<div class="statsbar rv">
+  <div class="st"><div class="stnum">47<em>B</em></div><div class="stlbl">DevOps TAM</div></div>
+  <div class="st"><div class="stnum">3<em>s</em></div><div class="stlbl">Context query</div></div>
+  <div class="st"><div class="stnum">0</div><div class="stlbl">Workflow changes</div></div>
+  <div class="st"><div class="stnum">40<em>+</em></div><div class="stlbl">Integrations</div></div>
 </div>
 
 <!-- PROBLEM -->
-<section id="problem">
-  <div class="problem-wrap">
-    <div>
-      <div class="eye rv">The problem</div>
-      <h2 class="sh1 rv">WHY DID<br>WE BUILD<br>IT THIS<br>WAY?</h2>
-      <p class="sbody rv">The engineer who knows the answer left 6 months ago. The Slack thread is buried. The ADR was never written. Your new developer spends 3 days finding what would have taken 20 minutes.</p>
-      <p class="sbody rv" style="margin-top:1.1rem">Every AI coding tool makes this worse. Copilot, Cursor — brilliant in a session. Useless across sessions. Zero memory of your architecture, decisions, or constraints.</p>
-    </div>
+<section class="problem" id="problem">
+  <div class="seye rv">The problem</div>
+  <h2 class="sh1 rv">WHY DID WE<br>BUILD IT<br>THIS WAY?</h2>
+  <div class="prob-grid">
     <div class="rv">
-      <div class="pcard bad">
-        <div class="pcard-tag">What exists today</div>
-        <div class="pcard-title">Git — stores WHAT changed</div>
-        <div class="pcard-body">A perfect record of every line modified. Zero record of why any of it was written that way.</div>
+      <p class="sbody">The engineer who knows the answer left 6 months ago. The Slack thread is buried. The ADR was never written. Every AI coding tool starts from zero every session.</p>
+      <p class="sbody" style="margin-top:1.2rem">SWAPCORE is the layer that sits between all your existing tools and permanently captures the reasoning behind every decision, commit, risk, and deployment — automatically.</p>
+    </div>
+    <div class="rv d2">
+      <div class="pcard">
+        <div class="ptag">What exists today</div>
+        <div class="ptitle">Git — stores WHAT changed</div>
+        <div class="pbody">Perfect code history. Zero history of why any of it was written that way.</div>
       </div>
-      <div class="pcard bad">
-        <div class="pcard-tag">What exists today</div>
-        <div class="pcard-title">Jira — stores WHAT was planned</div>
-        <div class="pcard-body">Ticket titles and status updates. The reasoning behind the approach? Nowhere.</div>
+      <div class="pcard">
+        <div class="ptag">What exists today</div>
+        <div class="ptitle">AI tools — session-bound</div>
+        <div class="pbody">Brilliant within one session. Complete amnesia the moment it closes.</div>
       </div>
-      <div class="pcard bad">
-        <div class="pcard-tag">What exists today</div>
-        <div class="pcard-title">AI tools — session-bound generation</div>
-        <div class="pcard-body">Extraordinary within a session. Complete amnesia the moment it closes. No memory of your architecture, decisions, or constraints.</div>
-      </div>
-      <div class="vs"><span>VS</span></div>
-      <div class="pcard good">
-        <div class="pcard-tag">What SWAPCORE adds</div>
-        <div class="pcard-title">SWAPCORE — stores WHY everything was built</div>
-        <div class="pcard-body">Every decision, every rejected alternative, every deferred risk — permanently stored, causally linked, and queryable by anyone on the team in seconds.</div>
+      <div class="vsep"><span>VS</span></div>
+      <div class="pcard ok">
+        <div class="ptag">What SWAPCORE adds</div>
+        <div class="ptitle">SWAPCORE — stores WHY forever</div>
+        <div class="pbody">Every decision, rejected alternative, and deferred risk — permanently stored, causally linked, queryable in 3 seconds by anyone.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HOW -->
-<section class="how-bg" id="how">
-  <div class="eye rv">The system</div>
-  <h2 class="sh1 rv">HOW IT<br>WORKS</h2>
-  <p class="sbody rv">Four layers. Zero developer workflow change. Installs in under 10 minutes.</p>
-  <div class="how-steps rv">
-    <div class="hstep">
-      <div class="hstep-n">01</div>
-      <div class="hstep-title">Connect</div>
-      <div class="hstep-body">SWAPCORE registers webhooks on your existing tools — GitHub, Jira, Jenkins, Slack. One command. 10 minutes. You change nothing about how you work.</div>
-      <div class="hstep-dot"></div>
-    </div>
-    <div class="hstep">
-      <div class="hstep-n">02</div>
-      <div class="hstep-title">Capture</div>
-      <div class="hstep-body">Every commit, PR, ticket update, and build result flows in automatically. AI infers why from messages, PR descriptions, and linked tickets. Full provenance stored.</div>
-      <div class="hstep-dot"></div>
-    </div>
-    <div class="hstep">
-      <div class="hstep-n">03</div>
-      <div class="hstep-title">Remember</div>
-      <div class="hstep-body">Three-tier memory: Redis hot cache, PostgreSQL episodic store, pgvector semantic index. Every record has a mandatory why_text field. The why is never optional.</div>
-      <div class="hstep-dot"></div>
-    </div>
-    <div class="hstep">
-      <div class="hstep-n">04</div>
-      <div class="hstep-title">Answer</div>
-      <div class="hstep-body">Ask anything in plain English. The Architect Agent assembles relevant memory, traces causal chains, and answers with source citations in under 3 seconds.</div>
-    </div>
-  </div>
-</section>
+<hr class="hr">
 
-<!-- SCENARIO -->
-<section id="scenario">
-  <div class="eye rv">Real-world example</div>
-  <h2 class="sh1 rv">PRIYA'S<br>MONDAY<br>MORNING</h2>
-  <p class="sbody rv">A fintech developer, first day on the payments service, assigned ticket PAY-391. Watch what SWAPCORE does at every step.</p>
-  <div style="overflow-x:auto">
-  <table class="flow-table rv">
-    <thead>
-      <tr>
-        <th>Actor</th>
-        <th>Event</th>
-        <th>What SWAPCORE stores or retrieves</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="actor-cell"><span class="role-pill rp-dev">Priya</span></td>
-        <td><span class="ev-title">Opens Cursor, asks a question</span><span class="ev-body">"I need to add retry logic to PaymentService. I have never worked here. What do I need to know?"</span></td>
-        <td class="ctx"><span class="info">Cursor MCP client detects architecture question. Calls swapcore_get_context() automatically before generating response. Priya sees nothing extra.</span></td>
-      </tr>
-      <tr>
-        <td class="actor-cell"><span class="role-pill rp-swap">SWAPCORE</span></td>
-        <td><span class="ev-title">Context Stitcher runs — 183ms</span><span class="ev-body">Parallel keyword + semantic search across 847 records. Causal chain expansion on top 3. 8 records assembled.</span></td>
-        <td class="ctx">
-          <span class="why">[DECISION] Stripe chosen over Braintree — idempotency was the core reason. Any retry without idempotency key recreates the double-charge problem.</span><br><br>
-          <span class="risk">[RISK_FLAG] Retry not implemented — OPEN since Feb 28. Priya flagged this herself 18 days ago.</span><br><br>
-          <span class="info">[BUG] PAY-287 — 3 customers double-charged March 2. Root cause: no retry + no idempotency key.</span><br><br>
-          <span class="why">[DECISION] Legal: max 3 retries (UK FCA). Params: base=500ms, 2× multiplier, 8s max, jitter=True.</span>
-        </td>
-      </tr>
-      <tr>
-        <td class="actor-cell"><span class="role-pill rp-cursor">Cursor AI</span></td>
-        <td><span class="ev-title">Answers with 6 weeks of memory</span><span class="ev-body">Not a generic answer. Every constraint from team history surfaced automatically — legal, technical, historical.</span></td>
-        <td class="ctx"><span class="why">Idempotency keys non-negotiable. Max 3 retries (FCA). base=500ms, 2×, 8s max, jitter=True. This closes the open risk flag from 18 days ago.</span></td>
-      </tr>
-      <tr>
-        <td class="actor-cell"><span class="role-pill rp-dev">Priya</span></td>
-        <td><span class="ev-title">Writes code, commits normally</span><span class="ev-body">Normal git commit mentioning PAY-391 and the idempotency approach.</span></td>
-        <td class="ctx"><span class="info">Git hook fires. IntentInferrer infers why_text. MemoryRecord written. Auto-linker connects commit → risk flag → incident. Risk flag marked resolved.</span></td>
-      </tr>
-      <tr>
-        <td class="actor-cell"><span class="role-pill rp-dev">Priya</span></td>
-        <td><span class="ev-title">Records 2 decisions — end of session</span><span class="ev-body">90 seconds. Two CLI commands.</span></td>
-        <td class="ctx">
-          <span class="why">[DECISION] tenacity over manual loop — jitter, per-exception conditions, retry stats logging built in.</span><br><br>
-          <span class="risk">[RISK_FLAG] Retry not load-tested against Stripe rate limits. Acceptable at 50 tx/day. Must address before scaling.</span>
-        </td>
-      </tr>
-      <tr>
-        <td class="actor-cell"><span class="role-pill rp-sys">3 wks later</span></td>
-        <td><span class="ev-title">Marcus joins — asks same codebase</span><span class="ev-body">"Should I use the same retry pattern for the refund processor?"</span></td>
-        <td class="ctx"><span class="why">Cursor fetches Priya's records automatically. Marcus gets: why tenacity was chosen, the 3-retry legal constraint, the idempotency naming pattern, and the open load-test risk — without Priya writing a single line of documentation.</span></td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
-</section>
+<!-- MEMORY LAYER DIAGRAM -->
+<section class="memory-section" id="memory">
+  <div class="seye rv">Architecture deep-dive</div>
+  <h2 class="sh1 rv">THE MEMORY<br>LAYER</h2>
+  <p class="sbody rv">Four layers working in concert. Every event from every tool flows down through normalisation, enrichment, and storage — then back up as precision-assembled context for the Architect Agent.</p>
 
-<!-- MEMORY RECORDS -->
-<section class="records-bg" id="records">
-  <div class="eye rv">Under the hood</div>
-  <h2 class="sh1 rv">WHAT GETS<br>STORED</h2>
-  <p class="sbody rv">Every MemoryRecord has a mandatory why_text field — enforced at the database level. This is the entire differentiator.</p>
-  <div class="records-grid">
-    <div class="rec rv rv-d1">
-      <div class="rec-hdr"><span class="rec-type rt-d">Decision</span><span class="rec-conf">Confidence: HIGH</span></div>
-      <div class="rec-title">Stripe chosen over Braintree — idempotency</div>
-      <div class="rec-what"><span class="rec-fl">What</span><p>Replaced Braintree with Stripe as primary payment processor. Migration completed Dec 2023.</p></div>
-      <div class="rec-why"><span class="rec-fl">Why</span><p>Braintree had no idempotency key support on retries — double-charging customers on network failures. Stripe idempotency keys make retries provably safe. This was the core reason. Any retry logic added here MUST use idempotency keys.</p></div>
-      <div class="rec-meta"><span>github · arjun@fintech.co</span><span>2023-12-04</span><span>[payments, idempotency, critical]</span></div>
-    </div>
-    <div class="rec rv rv-d2">
-      <div class="rec-hdr"><span class="rec-type rt-r">Risk flag</span><span class="rec-conf">Status: RESOLVED</span></div>
-      <div class="rec-title">Retry logic not implemented — pre-launch risk</div>
-      <div class="rec-what"><span class="rec-fl">What</span><p>PaymentService.charge() calls Stripe with no retry mechanism. Risk of double charge on timeout.</p></div>
-      <div class="rec-why"><span class="rec-fl">Why deferred</span><p>Shipping MVP for demo deadline. Must add before real transaction volume. If Stripe times out and frontend retries without idempotency key, customers will be double-charged — the exact scenario that caused the Braintree migration.</p></div>
-      <div class="rec-meta"><span>cli · priya@fintech.co</span><span>2024-02-28</span><span>[payments, retry, risk, pre-launch]</span></div>
-    </div>
-    <div class="rec rv rv-d1">
-      <div class="rec-hdr"><span class="rec-type rt-b">Bug / incident</span><span class="rec-conf">Confidence: HIGH</span></div>
-      <div class="rec-title">PAY-287 — double charge incident, 3 customers</div>
-      <div class="rec-what"><span class="rec-fl">What</span><p>3 customers double-charged during AWS degradation. Stripe refunds issued manually. March 2, 2024.</p></div>
-      <div class="rec-why"><span class="rec-fl">Why it happened</span><p>Stripe call timed out. Mobile app retry fired with a new request. No idempotency key. Stripe processed both as separate charges. Root cause: open risk flag was never resolved before going live with real transactions.</p></div>
-      <div class="rec-meta"><span>jira PAY-287 · arjun@fintech.co</span><span>2024-03-03</span><span>[payments, bug, double-charge, post-mortem]</span></div>
-    </div>
-    <div class="rec rv rv-d2">
-      <div class="rec-hdr"><span class="rec-type rt-c">Commit</span><span class="rec-conf">Confidence: HIGH</span></div>
-      <div class="rec-title">PAY-391: exponential backoff + idempotency keys</div>
-      <div class="rec-what"><span class="rec-fl">What</span><p>Added tenacity retry decorator to PaymentService.charge(). Max 3 attempts, base 500ms, 2× multiplier, 8s max, jitter. Idempotency key = SHA256(payment_id + attempt_number).</p></div>
-      <div class="rec-why"><span class="rec-fl">Why</span><p>Closes risk flag from Feb 28. PAY-287 confirmed urgency. Using tenacity over manual loop for built-in jitter, per-exception retry conditions, and retry stats logging. Parameters from legal review (max 3) and Stripe rate limit tuning.</p></div>
-      <div class="rec-meta"><span>github · priya@fintech.co</span><span>2024-03-18</span><span>[payments, retry, idempotency, tenacity]</span></div>
-    </div>
-  </div>
-</section>
+  <div class="mem-diagram rv">
+    <div class="mem-layers">
 
-<!-- INTEGRATION -->
-<section class="int-bg" id="integration">
-  <div class="int-wm">MCP</div>
-  <div class="eye rv">Cursor integration</div>
-  <h2 class="sh1 rv">ONE CONFIG<br>FILE.<br>THAT'S IT.</h2>
-  <p class="sbody rv" style="margin-bottom:3.5rem">SWAPCORE connects to Cursor via MCP — the Model Context Protocol. Cursor calls SWAPCORE tools automatically before answering architecture questions. No plugin. No workflow change.</p>
-  <div class="int-layout">
-    <div>
-      <div class="code-card rv">
-        <div class="cc-hdr">
-          <div class="cd" style="background:#ff5f57"></div>
-          <div class="cd" style="background:#ffbd2e"></div>
-          <div class="cd" style="background:#28c840"></div>
-          <span class="cf">~/.cursor/mcp.json</span>
+      <!-- L1 -->
+      <div class="mem-layer lyr1">
+        <div class="mem-layer-label">
+          <div class="mem-layer-num">L1</div>
+          <div class="mem-layer-name">Adapter layer</div>
         </div>
-        <div class="cc-body">
-<span class="c-cmt">// The only file you need to create.</span><br>
-<span class="c-cmt">// SWAPCORE works after this. Forever.</span><br><br>
-<span class="c-kw">{</span><br>
-&nbsp;&nbsp;<span class="c-k">"mcpServers"</span>: {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-k">"swapcore"</span>: {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-k">"command"</span>: <span class="c-s">"swapcore-mcp"</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-k">"args"</span>: [<span class="c-s">"--project"</span>, <span class="c-s">"my-app"</span>],<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-k">"env"</span>: {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-k">"SWAPCORE_API_KEY"</span>: <span class="c-s">"sk-swapcore-..."</span><br>
+        <div class="mem-layer-body">
+          <span class="chip cyan">GitHub webhook</span>
+          <span class="chip cyan">GitLab webhook</span>
+          <span class="chip cyan">Jira webhook</span>
+          <span class="chip cyan">Jenkins hook</span>
+          <span class="chip cyan">GitHub Actions</span>
+          <span class="chip cyan">Slack events</span>
+          <span class="chip cyan">Azure DevOps</span>
+          <span class="chip cyan">Polling workers</span>
+          <span class="chip cyan">CLI manual entry</span>
+          <span class="chip cyan">MCP server</span>
+          <span style="font-size:.78rem;color:var(--g6);width:100%;margin-top:.4rem">Every tool's raw payload normalised into a single CanonicalEvent. The raw field is never modified — replay safety.</span>
+        </div>
+      </div>
+
+      <div class="mem-arrow">↓ Kafka event bus — 6 topics — 30-day replay window ↓</div>
+
+      <!-- L2 -->
+      <div class="mem-layer lyr2">
+        <div class="mem-layer-label">
+          <div class="mem-layer-num">L2</div>
+          <div class="mem-layer-name">Intent engine</div>
+        </div>
+        <div class="mem-layer-body">
+          <span class="chip green">IntentInferrer</span>
+          <span class="chip green">LiteLLM router</span>
+          <span class="chip green">Claude / GPT-4</span>
+          <span class="chip green">Embedding gen</span>
+          <span class="chip green">Auto-linker</span>
+          <span class="chip green">Causal chain builder</span>
+          <span style="font-size:.78rem;color:var(--g6);width:100%;margin-top:.4rem">AI extracts why_text from commit message + PR + linked ticket. Confidence scored HIGH / MEDIUM / LOW. Causal links built between related records.</span>
+        </div>
+      </div>
+
+      <div class="mem-arrow">↓ Enriched CanonicalEvent → MemoryRecord write ↓</div>
+
+      <!-- L3 -->
+      <div class="mem-layer lyr3">
+        <div class="mem-layer-label">
+          <div class="mem-layer-num">L3</div>
+          <div class="mem-layer-name">Memory store</div>
+        </div>
+        <div class="mem-layer-body">
+          <span class="chip purple">Redis hot cache</span>
+          <span class="chip purple">PostgreSQL episodic</span>
+          <span class="chip purple">pgvector semantic</span>
+          <span class="chip purple">GIN full-text index</span>
+          <span class="chip purple">HNSW vector index</span>
+          <span class="chip purple">Causal graph</span>
+          <span style="font-size:.78rem;color:var(--g6);width:100%;margin-top:.4rem">Three-tier memory. Redis for 24h hot context. PostgreSQL for permanent episodic storage with mandatory <span style="color:var(--green)">why_text NOT NULL</span>. pgvector for 1536-dim semantic search.</span>
+        </div>
+      </div>
+
+      <div class="mem-arrow">↑ Context Stitcher — parallel search — scored + ranked ↑</div>
+
+      <!-- L4 -->
+      <div class="mem-layer lyr4">
+        <div class="mem-layer-label">
+          <div class="mem-layer-num">L4</div>
+          <div class="mem-layer-name">Intelligence</div>
+        </div>
+        <div class="mem-layer-body">
+          <span class="chip amber">Architect Agent</span>
+          <span class="chip amber">Context Stitcher</span>
+          <span class="chip amber">Why queries</span>
+          <span class="chip amber">Causal debug</span>
+          <span class="chip amber">Onboarding brief</span>
+          <span class="chip amber">Risk summary</span>
+          <span class="chip amber">Sprint summary</span>
+          <span class="chip amber">LangGraph</span>
+          <span class="chip amber">CLI + Web UI</span>
+          <span class="chip amber">MCP tools</span>
+          <span style="font-size:.78rem;color:var(--g6);width:100%;margin-top:.4rem">Top-8 ranked records assembled into a ContextBrief. Injected as system prompt prefix. Every agent action writes its own AGENT_ACTION MemoryRecord — the system accumulates memory of its own reasoning.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- sample memory record -->
+    <div class="mem-record rv d2">
+      <div class="mr-row"><span class="mr-key">memory_type</span><span class="mr-val tag">DECISION</span></div>
+      <div class="mr-row"><span class="mr-key">what_text</span><span class="mr-val">Replaced Braintree with Stripe as primary payment processor</span></div>
+      <div class="mr-row"><span class="mr-key">why_text</span><span class="mr-val why">Braintree had no idempotency key support on retries — double-charging customers on network failures. Stripe idempotency keys make retries provably safe. This was the core migration reason. ALL retry logic added here MUST use idempotency keys.</span></div>
+      <div class="mr-row"><span class="mr-key">confidence</span><span class="mr-val tag">HIGH</span></div>
+      <div class="mr-row"><span class="mr-key">linked_ids</span><span class="mr-val">[risk-flag-r3, incident-PAY-287, commit-a4f8c2d]</span></div>
+      <div class="mr-row"><span class="mr-key">tags</span><span class="mr-val tag">[payments, idempotency, stripe, migration, critical]</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- STAGES -->
+<section class="stages-section" id="stages">
+  <div class="stages-header">
+    <div class="seye rv">Product roadmap</div>
+    <h2 class="sh1 rv">THREE STAGES TO<br>FULL AUTONOMOUS<br>DELIVERY</h2>
+    <p class="sbody rv">SWAPCORE earns trust incrementally. Stage 1 only observes. Stage 2 acts with approval. Stage 3 operates end-to-end. Each stage is a complete product — not a beta.</p>
+  </div>
+
+  <div class="stages-timeline">
+
+    <!-- STAGE 1 -->
+    <div class="stage-block rv">
+      <div class="stage-dot s1"></div>
+      <div class="stage-meta">
+        <span class="stage-tag s1">Stage 1</span>
+        <span class="stage-months">Months 0–6 · 9 prompts · Observe only</span>
+      </div>
+      <h3 class="stage-name" style="color:var(--cyan)">MEMORY LAYER<br>+ ARCHITECT AGENT</h3>
+      <p class="stage-desc">The foundation. Passive capture of every commit, ticket, build, and decision from 8+ tools. Permanent memory with mandatory why_text. The Architect Agent answers any question about your codebase history in plain English — with source citations. Zero external writes. Zero workflow change.</p>
+      <div class="stage-features">
+        <div class="sfeat s1">
+          <div class="sfeat-title">Passive capture</div>
+          <div class="sfeat-body">Webhooks on GitHub, Jira, Jenkins, Slack, Azure DevOps. Git hooks for every commit. No manual effort.</div>
+        </div>
+        <div class="sfeat s1">
+          <div class="sfeat-title">Intent inference</div>
+          <div class="sfeat-body">AI extracts why_text from commit messages, PR descriptions, linked tickets. Confidence scored automatically.</div>
+        </div>
+        <div class="sfeat s1">
+          <div class="sfeat-title">Causal chains</div>
+          <div class="sfeat-body">Auto-linker builds causal relationships between decisions, commits, risk flags, and incidents over time.</div>
+        </div>
+        <div class="sfeat s1">
+          <div class="sfeat-title">Architect Agent</div>
+          <div class="sfeat-body">5 query types: why query, risk summary, causal debug, onboarding brief, sprint summary. All with source citations.</div>
+        </div>
+        <div class="sfeat s1">
+          <div class="sfeat-title">CLI + Dashboard</div>
+          <div class="sfeat-body">swapcore ask, record, debug, onboard, risks — full Rich terminal output. Web dashboard with live SSE updates.</div>
+        </div>
+        <div class="sfeat s1">
+          <div class="sfeat-title">MCP for Cursor</div>
+          <div class="sfeat-body">One config file. Cursor fetches SWAPCORE memory automatically before every architecture answer.</div>
+        </div>
+      </div>
+      <div class="stage-principle sp1"><strong>Stage 1 principle</strong>SWAPCORE never writes to any external tool in Stage 1. It only observes and answers. This is deliberate — trust is built before autonomy is granted. Enterprise customers must see the memory working before they will accept agents acting on it.</div>
+    </div>
+
+    <!-- STAGE 2 -->
+    <div class="stage-block rv">
+      <div class="stage-dot s2"></div>
+      <div class="stage-meta">
+        <span class="stage-tag s2">Stage 2</span>
+        <span class="stage-months">Months 7–18 · 4 prompts · Human-approved writes</span>
+      </div>
+      <h3 class="stage-name" style="color:var(--purple)">PM AGENT<br>+ DEV AGENT</h3>
+      <p class="stage-desc">The first agents that write to external tools. The PM Agent decomposes natural language requirements into Jira or Azure DevOps tickets. The Dev Agent takes a ticket and produces a pull request. Every external write goes through an unbypassable ApprovalGate — there is no code path that skips it.</p>
+      <div class="stage-features">
+        <div class="sfeat s2">
+          <div class="sfeat-title">PM Agent</div>
+          <div class="sfeat-body">Requirement → stories → Jira/ADO tickets. Fetches memory context before decomposing. Draft mode for review before writing.</div>
+        </div>
+        <div class="sfeat s2">
+          <div class="sfeat-title">Dev Agent</div>
+          <div class="sfeat-body">Ticket → implementation plan → approval → branch → code → tests → PR. Hard limits: no force-push, no secrets files, no protected branches.</div>
+        </div>
+        <div class="sfeat s2">
+          <div class="sfeat-title">ApprovalGate</div>
+          <div class="sfeat-body">Every write requires explicit human approval. 24-hour timeout. Rejection recorded to memory. Unbypassable in LangGraph state machine.</div>
+        </div>
+        <div class="sfeat s2">
+          <div class="sfeat-title">Memory-informed code</div>
+          <div class="sfeat-body">Dev Agent fetches full project memory before writing a single line. Cannot suggest a pattern the team explicitly rejected.</div>
+        </div>
+        <div class="sfeat s2">
+          <div class="sfeat-title">Multi-tool write support</div>
+          <div class="sfeat-body">Jira Cloud, Jira Server, Azure DevOps. Adapter pattern — swapping tools is a config change, not a rewrite.</div>
+        </div>
+        <div class="sfeat s2">
+          <div class="sfeat-title">Ephemeral code handling</div>
+          <div class="sfeat-body">Dev Agent clones to an ephemeral volume. Volume wiped after PR creation. No customer source code ever stored in SWAPCORE.</div>
+        </div>
+      </div>
+      <div class="stage-principle sp2"><strong>Stage 2 principle</strong>Human approval is not a feature — it is a hard architectural constraint enforced in the LangGraph state machine. There is no --skip-approval flag, no environment variable bypass, no emergency override. Approval gates exist because enterprise trust is earned action by action.</div>
+    </div>
+
+    <!-- STAGE 3 -->
+    <div class="stage-block rv">
+      <div class="stage-dot s3"></div>
+      <div class="stage-meta">
+        <span class="stage-tag s3">Stage 3</span>
+        <span class="stage-months">Months 19–36 · 4 prompts · Full autonomous pipeline</span>
+      </div>
+      <h3 class="stage-name" style="color:var(--amber)">DEVOPS + SECURITY<br>+ QA AGENTS<br>+ MARKETPLACE</h3>
+      <p class="stage-desc">The complete autonomous delivery platform. PR merge triggers the full pipeline: Security Agent scans, QA Agent validates, DevOps Agent deploys with auto-rollback. The integration marketplace lets third-party developers extend the tool universe. SWAPCORE becomes infrastructure.</p>
+      <div class="stage-features">
+        <div class="sfeat s3">
+          <div class="sfeat-title">DevOps Agent</div>
+          <div class="sfeat-body">PR merge → pipeline trigger → deploy (blue/green, canary, rolling) → monitor → auto-rollback at 1% error rate. All cloud providers supported.</div>
+        </div>
+        <div class="sfeat s3">
+          <div class="sfeat-title">Security Agent</div>
+          <div class="sfeat-body">SAST (Bandit, Semgrep, ESLint), DAST (OWASP ZAP), secret scanning (truffleHog), CVE audit. CRITICAL findings block pipeline — no override.</div>
+        </div>
+        <div class="sfeat s3">
+          <div class="sfeat-title">QA Agent</div>
+          <div class="sfeat-body">Test plan generation from memory + acceptance criteria. Regression analysis. Flakiness detection cross-referenced against memory. Coverage gating.</div>
+        </div>
+        <div class="sfeat s3">
+          <div class="sfeat-title">Multi-tenant hardening</div>
+          <div class="sfeat-body">ORM-level namespace isolation. Per-org AES-256-GCM encryption. Immutable audit log. RBAC. Data residency routing. SOC2 / ISO27001 exports.</div>
+        </div>
+        <div class="sfeat s3">
+          <div class="sfeat-title">Cloud-agnostic deploy</div>
+          <div class="sfeat-body">Provider adapters: AWS ECS, AWS EKS, GCP Cloud Run, GCP GKE, Azure AKS, on-prem kubectl. Terraform change gating with approval.</div>
+        </div>
+        <div class="sfeat s3">
+          <div class="sfeat-title">Integration marketplace</div>
+          <div class="sfeat-body">Adapter SDK for third-party developers. Verified badge. Hot-load without restart. Paid adapters with 70/30 revenue split. swapcore adapter install.</div>
+        </div>
+      </div>
+      <div class="stage-principle sp3"><strong>Stage 3 principle</strong>SWAPCORE becomes a platform, not a product. The integration marketplace is what makes it defensible at scale — third-party developers extend the tool universe far beyond what our team can build. After 90 days of memory, the switching cost for any customer becomes insurmountable. The data moat is the moat.</div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- INTEGRATIONS -->
+<section class="int-section" id="integrations">
+  <div class="seye rv">Integration ecosystem</div>
+  <h2 class="sh1 rv">40+ INTEGRATIONS<br>ACROSS EVERY<br>TOOL YOU USE</h2>
+  <p class="sbody rv">SWAPCORE connects to your existing stack via webhooks, polling workers, SDK embed, MCP server, and REST API. No tool lock-in. Every integration is swappable at the adapter boundary.</p>
+
+  <div class="int-cats rv">
+    <div>
+      <div class="icat-name">Source control (SCM)</div>
+      <div class="icat-chips">
+        <div class="itool new">GitHub</div>
+        <div class="itool new">GitLab</div>
+        <div class="itool new">Bitbucket</div>
+        <div class="itool">Azure Repos</div>
+        <div class="itool">Gitea</div>
+        <div class="itool">Gitea on-prem</div>
+      </div>
+    </div>
+    <div>
+      <div class="icat-name">Project management</div>
+      <div class="icat-chips">
+        <div class="itool new">Jira Cloud</div>
+        <div class="itool new">Azure DevOps</div>
+        <div class="itool new">Linear</div>
+        <div class="itool">Jira Server</div>
+        <div class="itool">Asana</div>
+        <div class="itool">Monday.com</div>
+        <div class="itool">Shortcut</div>
+        <div class="itool">Trello</div>
+        <div class="itool">ClickUp</div>
+        <div class="itool">Notion</div>
+      </div>
+    </div>
+    <div>
+      <div class="icat-name">CI / CD pipelines</div>
+      <div class="icat-chips">
+        <div class="itool new">GitHub Actions</div>
+        <div class="itool new">Jenkins</div>
+        <div class="itool new">GitLab CI</div>
+        <div class="itool">CircleCI</div>
+        <div class="itool">ArgoCD</div>
+        <div class="itool">TeamCity</div>
+        <div class="itool">Bamboo</div>
+        <div class="itool">Buildkite</div>
+        <div class="itool">Travis CI</div>
+        <div class="itool">Drone CI</div>
+      </div>
+    </div>
+    <div>
+      <div class="icat-name">Observability &amp; incidents</div>
+      <div class="icat-chips">
+        <div class="itool">PagerDuty</div>
+        <div class="itool">Datadog</div>
+        <div class="itool">Grafana</div>
+        <div class="itool">Sentry</div>
+        <div class="itool">New Relic</div>
+        <div class="itool">Prometheus</div>
+        <div class="itool">Opsgenie</div>
+        <div class="itool">VictorOps</div>
+        <div class="itool">Rollbar</div>
+      </div>
+    </div>
+    <div>
+      <div class="icat-name">Messaging &amp; communication</div>
+      <div class="icat-chips">
+        <div class="itool new">Slack</div>
+        <div class="itool">Microsoft Teams</div>
+        <div class="itool">Discord</div>
+        <div class="itool">Google Chat</div>
+      </div>
+    </div>
+    <div>
+      <div class="icat-name">Cloud infrastructure</div>
+      <div class="icat-chips">
+        <div class="itool">AWS CloudTrail</div>
+        <div class="itool">AWS ECS / EKS</div>
+        <div class="itool">GCP Cloud Run</div>
+        <div class="itool">GCP GKE</div>
+        <div class="itool">Azure AKS</div>
+        <div class="itool">Azure Monitor</div>
+        <div class="itool">Terraform Cloud</div>
+        <div class="itool">Pulumi</div>
+        <div class="itool">On-prem Kubernetes</div>
+      </div>
+    </div>
+    <div>
+      <div class="icat-name">AI / IDE tools (MCP)</div>
+      <div class="icat-chips">
+        <div class="itool new">Cursor</div>
+        <div class="itool new">Claude (Anthropic)</div>
+        <div class="itool new">Windsurf</div>
+        <div class="itool new">Continue.dev</div>
+        <div class="itool">VS Code extension</div>
+        <div class="itool">JetBrains plugin</div>
+        <div class="itool">Zed</div>
+        <div class="itool">Neovim plugin</div>
+      </div>
+    </div>
+    <div>
+      <div class="icat-name">Knowledge &amp; documentation</div>
+      <div class="icat-chips">
+        <div class="itool">Confluence</div>
+        <div class="itool">Notion</div>
+        <div class="itool">Google Drive</div>
+        <div class="itool">SharePoint</div>
+        <div class="itool">Backstage</div>
+        <div class="itool">Readme.io</div>
+      </div>
+    </div>
+    <div>
+      <div class="icat-name">ITSM &amp; enterprise</div>
+      <div class="icat-chips">
+        <div class="itool">ServiceNow</div>
+        <div class="itool">Freshservice</div>
+        <div class="itool">Zendesk</div>
+        <div class="itool">BMC Remedy</div>
+        <div class="itool">Ivanti</div>
+      </div>
+    </div>
+    <div>
+      <div class="icat-name">Security scanning</div>
+      <div class="icat-chips">
+        <div class="itool">Snyk</div>
+        <div class="itool">SonarQube</div>
+        <div class="itool">Semgrep</div>
+        <div class="itool">Checkov</div>
+        <div class="itool">OWASP ZAP</div>
+        <div class="itool">truffleHog</div>
+        <div class="itool">Bandit</div>
+        <div class="itool">npm audit</div>
+      </div>
+    </div>
+    <div style="padding:.8rem 0;border-top:1px solid var(--g4);margin-top:.5rem">
+      <span style="font-family:var(--fc);font-size:.68rem;color:var(--cyan);letter-spacing:.1em">HIGHLIGHTED = Stage 1 launch integrations</span>
+      <span style="font-family:var(--fc);font-size:.68rem;color:var(--g6);letter-spacing:.1em;margin-left:1.5rem">All others available via Adapter SDK or Stage 2/3 marketplace</span>
+    </div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- ARCHITECTURE DIAGRAM -->
+<section class="arch-section" id="architecture">
+  <div class="seye rv">End-to-end flow</div>
+  <h2 class="sh1 rv">FROM IDEA<br>TO DEPLOYMENT<br>WITH SWAPCORE</h2>
+  <p class="sbody rv">Every stage of the software delivery lifecycle — from a developer's first question to a production deployment — flows through SWAPCORE's memory layer. Agents act at each stage, informed by permanent institutional memory.</p>
+
+  <div class="arch-diagram">
+
+    <!-- ── TOP ZONE: DEVELOPER ── -->
+    <div class="arch-band rv">Developer zone — Idea · Requirements · Code · Review</div>
+
+    <div class="pipeline rv">
+
+      <!-- ROW 1: Developer + IDE -->
+      <div class="prow">
+        <div class="prow-left">
+          <div class="anode an-cyan">
+            <div class="an-label">Input</div>
+            <div class="an-title">Developer / Product Owner</div>
+            <div class="an-body">Natural language requirement, feature idea, or bug report. Enters SWAPCORE via CLI, web UI, or Cursor chat.</div>
+          </div>
+        </div>
+        <div class="prow-mid">
+          <div class="prow-dot" style="color:var(--cyan)"></div>
+          <div class="prow-arrow" style="color:var(--cyan)"></div>
+        </div>
+        <div class="prow-right">
+          <div class="anode an-cyan">
+            <div class="an-label">IDE integration</div>
+            <div class="an-title">Cursor / Claude (MCP)</div>
+            <div class="an-body">AI calls swapcore_get_context() before answering. Full project memory injected as system prompt prefix — invisibly, in 200ms.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 2 AGENT: PM -->
+      <div class="prow">
+        <div class="prow-left">
+          <div class="anode an-purple">
+            <div class="an-label">Stage 2 · PM Agent</div>
+            <div class="an-title">Requirement → Tickets</div>
+            <div class="an-body">Decomposes requirement into Jira / Azure DevOps stories. Fetches memory for similar past work. ApprovalGate before any write.</div>
+          </div>
+        </div>
+        <div class="prow-mid">
+          <div class="prow-dot" style="color:var(--purple)"></div>
+          <div class="prow-arrow" style="color:var(--purple)"></div>
+        </div>
+        <div class="prow-right">
+          <div class="anode an-green">
+            <div class="an-label">Output</div>
+            <div class="an-title">Jira / Azure DevOps</div>
+            <div class="an-body">Stories with acceptance criteria, story points, epic links — all cross-referenced against 6 weeks of team decisions.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 2 AGENT: DEV -->
+      <div class="prow">
+        <div class="prow-left">
+          <div class="anode an-purple">
+            <div class="an-label">Stage 2 · Dev Agent</div>
+            <div class="an-title">Ticket → Pull Request</div>
+            <div class="an-body">Reads memory context, generates implementation plan, requests approval, clones repo, implements, runs tests, creates PR with memory citations.</div>
+          </div>
+        </div>
+        <div class="prow-mid">
+          <div class="prow-dot" style="color:var(--purple)"></div>
+          <div class="prow-arrow" style="color:var(--purple)"></div>
+        </div>
+        <div class="prow-right">
+          <div class="anode an-green">
+            <div class="an-label">Output</div>
+            <div class="an-title">GitHub / GitLab PR</div>
+            <div class="an-body">Branch created, tests passing, PR description includes architectural decisions consulted and risk flags checked.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── SWAPCORE MEMORY CORE ── -->
+    <div class="rv d1" style="margin:2.5rem 0">
+      <div class="sc-band">
+        <div class="sc-band-title">SWAPCORE MEMORY CORE</div>
+        <div class="sc-band-sub">Kafka event bus · PostgreSQL + pgvector · Redis · Context Stitcher · Architect Agent</div>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1rem">
+          <span style="font-family:var(--fm);font-size:.68rem;color:rgba(0,229,255,.6)">Every event captured →</span>
+          <span style="font-family:var(--fm);font-size:.68rem;color:rgba(57,255,154,.6)">why_text inferred →</span>
+          <span style="font-family:var(--fm);font-size:.68rem;color:rgba(192,132,252,.6)">causal links built →</span>
+          <span style="font-family:var(--fm);font-size:.68rem;color:rgba(255,184,0,.6)">context assembled →</span>
+          <span style="font-family:var(--fm);font-size:.68rem;color:rgba(255,255,255,.4)">agents informed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MIDDLE ZONE: AGENTS ── -->
+    <div class="arch-band rv">Agent zone — All agents running in parallel, informed by memory</div>
+
+    <div class="agents-row rv">
+      <div class="agent-card">
+        <div class="ac-num">01</div>
+        <div class="ac-stage acs1">Stage 1</div>
+        <div class="ac-name">Architect Agent</div>
+        <div class="ac-desc">Answers questions about codebase history, decisions, risks, and onboarding in plain English. 5 query types.</div>
+      </div>
+      <div class="agent-card">
+        <div class="ac-num">02</div>
+        <div class="ac-stage acs2">Stage 2</div>
+        <div class="ac-name">PM Agent</div>
+        <div class="ac-desc">Decomposes requirements into tickets with full memory context. Jira + Azure DevOps. Approval-gated.</div>
+      </div>
+      <div class="agent-card">
+        <div class="ac-num">03</div>
+        <div class="ac-stage acs2">Stage 2</div>
+        <div class="ac-name">Dev Agent</div>
+        <div class="ac-desc">Ticket to PR with memory-informed code. Hard limits enforced. Two approval gates before any push.</div>
+      </div>
+      <div class="agent-card">
+        <div class="ac-num">04</div>
+        <div class="ac-stage acs3">Stage 3</div>
+        <div class="ac-name">Security Agent</div>
+        <div class="ac-desc">SAST, DAST, CVE scan, secret detection. CRITICAL findings block pipeline — no override possible.</div>
+      </div>
+      <div class="agent-card">
+        <div class="ac-num">05</div>
+        <div class="ac-stage acs3">Stage 3</div>
+        <div class="ac-name">QA Agent</div>
+        <div class="ac-desc">Test plan generation, execution, regression analysis, flakiness detection against memory history.</div>
+      </div>
+    </div>
+
+    <!-- ── BOTTOM ZONE: CI/CD + DEPLOYMENT ── -->
+    <div class="arch-band rv">Delivery zone — Build · Test · Scan · Deploy · Monitor</div>
+
+    <div class="pipeline rv">
+
+      <!-- CI/CD -->
+      <div class="prow">
+        <div class="prow-left">
+          <div class="anode an-amber">
+            <div class="an-label">Stage 3 · Security Agent</div>
+            <div class="an-title">SAST + DAST + CVE scan</div>
+            <div class="an-body">Bandit, Semgrep, ESLint security, OWASP ZAP, truffleHog, npm audit. Findings written as MemoryRecords with PR link.</div>
+          </div>
+        </div>
+        <div class="prow-mid">
+          <div class="prow-dot" style="color:var(--amber)"></div>
+          <div class="prow-arrow" style="color:var(--amber)"></div>
+        </div>
+        <div class="prow-right">
+          <div class="anode an-amber">
+            <div class="an-label">Stage 3 · QA Agent</div>
+            <div class="an-title">Test generation + execution</div>
+            <div class="an-body">Generates missing tests from acceptance criteria + memory. Runs suite. Regression analysis. Coverage gate at 80%.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEVOPS AGENT -->
+      <div class="prow">
+        <div class="prow-left">
+          <div class="anode an-red">
+            <div class="an-label">Stage 3 · DevOps Agent</div>
+            <div class="an-title">Deploy strategy selection</div>
+            <div class="an-body">Fetches deployment history from memory. Selects blue/green, canary, or rolling based on service risk profile. Terraform changes gated.</div>
+          </div>
+        </div>
+        <div class="prow-mid">
+          <div class="prow-dot" style="color:var(--red)"></div>
+          <div class="prow-arrow" style="color:var(--red)"></div>
+        </div>
+        <div class="prow-right">
+          <div class="anode an-red">
+            <div class="an-label">Stage 3 · DevOps Agent</div>
+            <div class="an-title">Execute + Monitor</div>
+            <div class="an-body">Triggers CI/CD pipeline. Monitors error rate + latency 10 min post-deploy. Auto-rollback at 1% error rate. Outcome written to memory.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCTION -->
+      <div class="prow">
+        <div class="prow-left">
+          <div class="anode an-blue">
+            <div class="an-label">Target</div>
+            <div class="an-title">Production environment</div>
+            <div class="an-body">AWS ECS / EKS · GCP Cloud Run / GKE · Azure AKS · On-prem Kubernetes. All cloud-agnostic via provider adapters.</div>
+          </div>
+        </div>
+        <div class="prow-mid">
+          <div class="prow-dot" style="color:var(--blue)"></div>
+          <div class="prow-arrow up" style="color:var(--cyan)"></div>
+        </div>
+        <div class="prow-right">
+          <div class="anode an-teal">
+            <div class="an-label">Feedback loop</div>
+            <div class="an-title">Memory updated forever</div>
+            <div class="an-body">DEPLOYMENT MemoryRecord written: strategy, outcome, rollback reason. Every future deploy is informed by all past deploys.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── LEGEND ── -->
+    <div class="rv d2" style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:2.5rem;padding:1.2rem 1.5rem;border:1px solid var(--g4);background:var(--g2)">
+      <span style="font-family:var(--fc);font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--g6)">Legend:</span>
+      <span style="font-family:var(--fc);font-size:.68rem;letter-spacing:.08em"><span style="color:var(--cyan)">■</span> Stage 1 — Observe only</span>
+      <span style="font-family:var(--fc);font-size:.68rem;letter-spacing:.08em"><span style="color:var(--purple)">■</span> Stage 2 — Human-approved writes</span>
+      <span style="font-family:var(--fc);font-size:.68rem;letter-spacing:.08em"><span style="color:var(--amber)">■</span> Stage 3 — Full autonomous pipeline</span>
+      <span style="font-family:var(--fc);font-size:.68rem;letter-spacing:.08em"><span style="color:var(--green)">■</span> External tool output</span>
+      <span style="font-family:var(--fc);font-size:.68rem;letter-spacing:.08em"><span style="color:var(--blue)">■</span> Infrastructure / cloud</span>
+    </div>
+
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- VIBE CODING REAL EXAMPLE -->
+<section class="vibe-section" id="vibe-example">
+  <div class="seye rv">Real-world vibe coding</div>
+  <h2 class="sh1 rv">BUILDING AN<br>AI WRITING<br>ASSISTANT SaaS</h2>
+  <p class="sbody rv">Watch how SWAPCORE gives a solo developer using Cursor + Claude API persistent memory across 5 weeks of vibe coding sessions. No re-explaining the stack. No forgotten decisions. No duplicate bugs.</p>
+
+  <div class="vibe-scenario">
+
+    <!-- App intro -->
+    <div class="vs-intro rv">
+      <div class="vs-app-card">
+        <div class="vac-tag">The app being built</div>
+        <div class="vac-title">Scribe — AI writing assistant</div>
+        <div class="vac-desc">A SaaS product that uses the Claude API to help users draft, refine, and improve long-form content. Multi-tenant, subscription billing via Stripe, real-time streaming responses, usage metering per org. Built solo by one developer over 5 weeks using Cursor + Claude.</div>
+        <div class="vac-stack">
+          <span class="vac-chip">Next.js 14</span>
+          <span class="vac-chip">Claude claude-sonnet-4-5</span>
+          <span class="vac-chip">Supabase</span>
+          <span class="vac-chip">Stripe</span>
+          <span class="vac-chip">Tailwind</span>
+          <span class="vac-chip">Vercel</span>
+          <span class="vac-chip">SWAPCORE</span>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:.9rem;color:var(--g7);line-height:1.8;margin-bottom:1.2rem">Without SWAPCORE, every session starts with re-explaining the stack, re-justifying past decisions, and risking contradictions across sessions.</p>
+        <p style="font-size:.9rem;color:var(--g7);line-height:1.8;margin-bottom:1.2rem">With SWAPCORE, the developer records 2–3 decisions per session. Cursor fetches the full memory brief automatically. By week 4, the AI is generating code that is consistent with every architectural choice made in week 1.</p>
+        <div style="border:1px solid rgba(0,229,255,.2);padding:1rem 1.2rem;background:rgba(0,229,255,.04)">
+          <div style="font-family:var(--fc);font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:.4rem">SWAPCORE session discipline</div>
+          <div style="font-size:.82rem;color:var(--g7);line-height:1.7">Start session → ask Cursor "what have we built and why?" → build → record 2–3 decisions → commit. Takes 90 extra seconds. Compounds for months.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Session timeline - accordion -->
+    <div class="session-timeline rv">
+
+      <!-- SESSION 1 -->
+      <div class="session open" onclick="toggleSession(this)">
+        <div class="session-hdr">
+          <div class="s-week">W1</div>
+          <div class="s-title">Project setup — Claude API, auth, database schema</div>
+          <div class="s-date">Session 1 · Monday</div>
+        </div>
+        <div class="session-body">
+          <div class="conv">
+            <div class="cbubble">
+              <span class="cb-who cb-dev">Dev</span>
+              <div class="cb-text">I am building a SaaS writing assistant using the Claude API. Starting fresh. What is the best auth + database setup for a multi-tenant app on Next.js 14?</div>
+            </div>
+            <div class="cbubble">
+              <span class="cb-who cb-cursor">Cursor AI</span>
+              <div class="cb-text"><strong>Without SWAPCORE:</strong> Generic answer about Next-Auth, Prisma, PlanetScale options. No project context. Developer picks randomly and may contradict later decisions.</div>
+            </div>
+          </div>
+          <p style="font-size:.78rem;color:var(--g6);font-style:italic;margin-bottom:.8rem">→ Developer builds: Supabase auth + Supabase PostgreSQL, NextAuth.js, org-scoped RLS policies. Records decisions:</p>
+          <div class="inline-rec">
+            <span class="ir-type">DECISION · confidence: HIGH</span>
+            <span class="ir-what">What: Using Supabase for auth + database. NextAuth.js with Supabase adapter.</span>
+            <span class="ir-why">Why: Supabase handles RLS natively — org-scoped data isolation without application-layer code. Clerk rejected at $25/month for 1000 users. PlanetScale rejected — no RLS, would need custom isolation middleware for every query.</span>
+          </div>
+          <div class="inline-rec">
+            <span class="ir-type">DECISION · confidence: HIGH</span>
+            <span class="ir-what">What: Multi-tenant isolation via Supabase RLS policies on every table.</span>
+            <span class="ir-why">Why: RLS enforced at database level means even a buggy API route cannot leak cross-org data. Took 4 hours to get right — the policy must use auth.uid() IN (SELECT user_id FROM org_members WHERE org_id = rows.org_id). Document this pattern for every future table.</span>
+          </div>
+          <div class="s-outcomes">
+            <span class="s-out so-dec">2 decisions recorded</span>
+            <span class="s-out so-commit">initial commit</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SESSION 2 -->
+      <div class="session" onclick="toggleSession(this)">
+        <div class="session-hdr">
+          <div class="s-week">W2</div>
+          <div class="s-title">Claude API streaming — token metering + rate limiting</div>
+          <div class="s-date">Session 2 · Thursday</div>
+        </div>
+        <div class="session-body">
+          <div class="conv">
+            <div class="cbubble">
+              <span class="cb-who cb-dev">Dev</span>
+              <div class="cb-text">I want to add Claude API streaming to the editor. Users should see the text appear in real time. Also need to meter token usage per org for billing.</div>
+            </div>
+            <div class="cbubble">
+              <span class="cb-who cb-swap">SWAPCORE</span>
+              <div class="cb-text">Fetching context brief for "Claude API streaming token metering"... <strong>Found 2 relevant records from Week 1.</strong> Supabase RLS pattern (org isolation), NextAuth session structure. Injecting into Cursor system prompt.</div>
+            </div>
+            <div class="cbubble">
+              <span class="cb-who cb-cursor">Cursor AI</span>
+              <div class="cb-text">Given your Supabase RLS setup, here is the streaming implementation. <strong>Important:</strong> the token counter must write to a <code>usage_events</code> table with the same RLS pattern you established in Week 1 — <code>auth.uid() IN (SELECT user_id FROM org_members...)</code>. Otherwise a billing query could leak cross-org usage data. Use <code>anthropic.messages.stream()</code> with Server-Sent Events on the Next.js API route...</div>
+            </div>
+          </div>
+          <p style="font-size:.78rem;color:var(--g6);font-style:italic;margin-bottom:.8rem">→ Cursor referenced Week 1 RLS pattern automatically. Saved 2 hours of debugging a cross-org data leak. Developer records:</p>
+          <div class="inline-rec">
+            <span class="ir-type">DECISION · confidence: HIGH</span>
+            <span class="ir-what">What: Streaming Claude responses via SSE on /api/generate route. Token counting in Supabase usage_events table.</span>
+            <span class="ir-why">Why: Using anthropic.messages.stream() with ReadableStream piped to SSE. Token metering happens server-side in the stream onFinalMessage callback — never trust client-reported token counts for billing. usage_events table uses same RLS policy as all other tables per Week 1 isolation pattern.</span>
+          </div>
+          <div class="inline-rec">
+            <span class="ir-type">RISK_FLAG · deferred</span>
+            <span class="ir-what">What: No rate limiting on /api/generate. A single user could exhaust the org token budget in minutes.</span>
+            <span class="ir-why">Deferred because: Shipping MVP for first 3 beta users who are known. Must add Upstash Redis rate limiting before public launch. Risk: org cost overrun if any user runs automated scripts against the endpoint.</span>
+          </div>
+          <div class="s-outcomes">
+            <span class="s-out so-dec">1 decision recorded</span>
+            <span class="s-out so-risk">1 risk flagged</span>
+            <span class="s-out so-commit">feat: claude streaming + usage metering</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SESSION 3 -->
+      <div class="session" onclick="toggleSession(this)">
+        <div class="session-hdr">
+          <div class="s-week">W3</div>
+          <div class="s-title">Stripe billing — subscription plans + webhook handler</div>
+          <div class="s-date">Session 3 · Tuesday</div>
+        </div>
+        <div class="session-body">
+          <div class="conv">
+            <div class="cbubble">
+              <span class="cb-who cb-dev">Dev</span>
+              <div class="cb-text">Add Stripe subscription billing. Two plans: Starter ($29/mo, 50k tokens) and Pro ($99/mo, 500k tokens). Need webhook to update the subscription status in the database.</div>
+            </div>
+            <div class="cbubble">
+              <span class="cb-who cb-swap">SWAPCORE</span>
+              <div class="cb-text">Context brief assembled. <strong>3 records relevant:</strong> Supabase RLS pattern · SSE streaming architecture · open risk flag about rate limiting (week 2). Injecting into Cursor.</div>
+            </div>
+            <div class="cbubble">
+              <span class="cb-who cb-cursor">Cursor AI</span>
+              <div class="cb-text">Stripe webhook handler for this project. <strong>Critical:</strong> the webhook must update the <code>org_subscriptions</code> table using the Supabase service role key, <strong>not the anon key</strong> — because RLS will block it. You established RLS on all tables in Week 1. The webhook runs as a server process outside the user session, so it has no <code>auth.uid()</code> context. Service role bypasses RLS deliberately here. Also — this is a good time to add the Upstash rate limiting you flagged as a risk in Week 2...</div>
+            </div>
+          </div>
+          <p style="font-size:.78rem;color:var(--g6);font-style:italic;margin-bottom:.8rem">→ Cursor surfaced the RLS + service role issue AND the open risk flag from Week 2 without being asked. Both would have caused production bugs.</p>
+          <div class="inline-rec">
+            <span class="ir-type">DECISION · confidence: HIGH</span>
+            <span class="ir-what">What: Stripe webhooks use Supabase service_role key to update org_subscriptions. Rate limiting added via Upstash Redis (closes risk flag from Week 2).</span>
+            <span class="ir-why">Why: Webhook has no user session → no auth.uid() → RLS blocks anon key writes. Service role is the only correct pattern here. Rate limit: 20 requests per user per minute using sliding window in Upstash. Closes the risk flag about cost overrun from unmetered usage.</span>
+          </div>
+          <div class="s-outcomes">
+            <span class="s-out so-dec">1 decision recorded</span>
+            <span class="s-out so-risk">risk flag closed</span>
+            <span class="s-out so-commit">feat: stripe billing + rate limiting</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SESSION 4 -->
+      <div class="session" onclick="toggleSession(this)">
+        <div class="session-hdr">
+          <div class="s-week">W4</div>
+          <div class="s-title">System prompts — user-customisable AI personas</div>
+          <div class="s-date">Session 4 · Wednesday</div>
+        </div>
+        <div class="session-body">
+          <div class="conv">
+            <div class="cbubble">
+              <span class="cb-who cb-dev">Dev</span>
+              <div class="cb-text">I want users to be able to create and save custom system prompts — like "write in a formal legal tone" or "respond as a startup founder". Store them per org, reuse across sessions.</div>
+            </div>
+            <div class="cbubble">
+              <span class="cb-who cb-cursor">Cursor AI</span>
+              <div class="cb-text">For the <code>system_prompts</code> table — apply the same RLS policy you established in Week 1: <code>auth.uid() IN (SELECT user_id FROM org_members WHERE org_id = system_prompts.org_id)</code>. You have now used this pattern on 4 tables (users, usage_events, org_subscriptions, system_prompts). Worth extracting it into a reusable Supabase policy template so new tables get it automatically. Also — system prompts are injected before the user message, so they count against the token budget. The usage_events counter from Week 2 needs to include system prompt tokens in its calculation...</div>
+            </div>
+          </div>
+          <p style="font-size:.78rem;color:var(--g6);font-style:italic;margin-bottom:.8rem">→ Cursor noticed the RLS pattern applied 4 times and suggested a template. It also caught the token counting gap — system prompt tokens were being excluded from billing, which would have caused revenue leakage at scale.</p>
+          <div class="inline-rec">
+            <span class="ir-type">DECISION · confidence: HIGH</span>
+            <span class="ir-what">What: Extracted RLS pattern into reusable Supabase policy function. System prompt tokens included in usage_events count.</span>
+            <span class="ir-why">Why: After applying the same RLS boilerplate to 4 tables, abstracted into create_org_rls_policy(table_name) function. Prevents future tables from being accidentally unprotected. Token count now uses input_tokens from the Anthropic API response which includes system prompt length — fixes billing undercount that would cost ~12% revenue at scale.</span>
+          </div>
+          <div class="s-outcomes">
+            <span class="s-out so-dec">1 decision recorded</span>
+            <span class="s-out so-commit">feat: system prompts + rls refactor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SESSION 5 -->
+      <div class="session" onclick="toggleSession(this)">
+        <div class="session-hdr">
+          <div class="s-week">W5</div>
+          <div class="s-title">New developer joins — onboards in 20 minutes</div>
+          <div class="s-date">Session 5 · Monday</div>
+        </div>
+        <div class="session-body">
+          <div class="conv">
+            <div class="cbubble">
+              <span class="cb-who cb-dev">New dev (Rahul)</span>
+              <div class="cb-text">I have just joined the Scribe project. Can you give me a full overview of the architecture, key decisions, and anything I should know before I start adding the document export feature?</div>
+            </div>
+            <div class="cbubble">
+              <span class="cb-who cb-swap">SWAPCORE</span>
+              <div class="cb-text">Running onboarding brief for project "scribe" across all 28 MemoryRecords... assembled in 210ms.</div>
+            </div>
+            <div class="cbubble">
+              <span class="cb-who cb-cursor">Cursor AI</span>
+              <div class="cb-text"><strong>Scribe — Architecture brief for Rahul:</strong><br><br>
+                <strong>Stack:</strong> Next.js 14, Supabase (auth + PostgreSQL), Claude claude-sonnet-4-5 API, Stripe, Vercel.<br><br>
+                <strong>Most important pattern — RLS isolation:</strong> Every table uses an identical RLS policy via the <code>create_org_rls_policy()</code> function (added Week 4). Any new table you create must call this. If you skip it, org data becomes visible cross-tenant.<br><br>
+                <strong>Claude API:</strong> Streaming via SSE on <code>/api/generate</code>. Token counting uses <code>input_tokens + output_tokens</code> from the final message response — includes system prompt tokens. Rate limited at 20 req/min per user via Upstash Redis.<br><br>
+                <strong>Stripe webhooks:</strong> Must use service_role key, not anon key — RLS blocks anon writes from server processes with no user session.<br><br>
+                <strong>For document export:</strong> PDF generation should use the service_role key for the same reason. Store exports in Supabase Storage with the org_id as the bucket path prefix for isolation.
+              </div>
+            </div>
+          </div>
+          <p style="font-size:.78rem;color:var(--g6);font-style:italic;margin-bottom:.8rem">→ Rahul had full project context in 20 minutes. Every architectural decision from 5 weeks, the RLS pattern, the token counting fix, the service role rule — all surfaced automatically. Zero documentation was ever written.</p>
+          <div class="s-outcomes">
+            <span class="s-out so-dec" style="border-color:rgba(57,255,154,.3);color:var(--green)">28 records · 5 weeks · onboarding in 20 min</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Compound value callout -->
+    <div class="compound-box rv d2">
+      <div class="cb-headline">What SWAPCORE captured across 5 weeks of vibe coding Scribe</div>
+      <div class="cb-stats">
+        <div class="cbs"><div class="cbs-n">28</div><div class="cbs-l">Memory records</div></div>
+        <div class="cbs"><div class="cbs-n">8</div><div class="cbs-l">Decisions saved</div></div>
+        <div class="cbs"><div class="cbs-n">3</div><div class="cbs-l">Bugs prevented</div></div>
+        <div class="cbs"><div class="cbs-n">20<em>min</em></div><div class="cbs-l">New dev onboarding</div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- CURSOR INTEGRATION -->
+<section class="cursor-section" id="cursor">
+  <div class="cursor-wm">MCP</div>
+  <div class="seye rv">Cursor + SWAPCORE</div>
+  <h2 class="sh1 rv">ONE CONFIG<br>FILE. THAT'S IT.</h2>
+  <p class="sbody rv" style="margin-bottom:3.5rem">SWAPCORE connects to Cursor, Claude, Windsurf, and any MCP-compatible AI tool via the Model Context Protocol. The AI fetches project memory automatically before every answer — without any developer action.</p>
+  <div class="cursor-layout">
+    <div>
+      <div class="codecard rv">
+        <div class="cchdr"><div class="cd" style="background:#ff5f57"></div><div class="cd" style="background:#ffbd2e"></div><div class="cd" style="background:#28c840"></div><span class="cfn">~/.cursor/mcp.json</span></div>
+        <div class="ccbody">
+<span class="cc">// One-time setup. Works forever after this.</span><br>
+<span class="ckw">{</span><br>
+&nbsp;&nbsp;<span class="ck">"mcpServers"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="ck">"swapcore"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ck">"command"</span>: <span class="cs">"swapcore-mcp"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ck">"args"</span>: [<span class="cs">"--project"</span>, <span class="cs">"payments-api"</span>],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ck">"env"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ck">"SWAPCORE_API_KEY"</span>: <span class="cs">"sk-swapcore-..."</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;}<br>
-<span class="c-kw">}</span>
+<span class="ckw">}</span>
         </div>
       </div>
-      <div class="code-card rv">
-        <div class="cc-hdr">
-          <div class="cd" style="background:#ff5f57"></div>
-          <div class="cd" style="background:#ffbd2e"></div>
-          <div class="cd" style="background:#28c840"></div>
-          <span class="cf">Terminal — one-time setup</span>
-        </div>
-        <div class="cc-body">
-<span class="c-cmt"># 1. Install the SWAPCORE MCP server</span><br>
+      <div class="codecard rv d1">
+        <div class="cchdr"><div class="cd" style="background:#ff5f57"></div><div class="cd" style="background:#ffbd2e"></div><div class="cd" style="background:#28c840"></div><span class="cfn">Terminal</span></div>
+        <div class="ccbody">
+<span class="cc"># Install MCP server (once)</span><br>
 npm install -g @swapcore/mcp<br><br>
-<span class="c-cmt"># 2. Initialise your repo (once per project)</span><br>
-cd your-repo && swapcore init \<br>
-&nbsp;&nbsp;--project <span class="c-s">my-app</span> \<br>
-&nbsp;&nbsp;--github-repo <span class="c-s">org/repo</span><br><br>
-<span class="c-cmt"># Done. Cursor now has full SWAPCORE access.</span><br>
-<span class="c-cmt"># Every commit captured. Every question answered.</span>
+<span class="cc"># Initialise project (once per repo)</span><br>
+swapcore init \<br>
+&nbsp;&nbsp;--project <span class="cs">payments-api</span> \<br>
+&nbsp;&nbsp;--github-repo <span class="cs">org/repo</span><br><br>
+<span class="cc"># Done. Cursor now has full project memory.</span>
         </div>
       </div>
     </div>
     <div>
-      <div class="int-steps">
-        <div class="istep rv">
-          <div class="istep-n">01</div>
-          <div>
-            <div class="istep-title">Cursor calls SWAPCORE automatically</div>
-            <div class="istep-body">When you ask an architecture or debugging question, Cursor's MCP client calls swapcore_get_context() before responding. You never trigger this manually — it just works.</div>
-          </div>
-        </div>
-        <div class="istep rv">
-          <div class="istep-n">02</div>
-          <div>
-            <div class="istep-title">Memory brief injected into system prompt</div>
-            <div class="istep-body">The top 8 relevant MemoryRecords are formatted and prepended to Cursor's system prompt. The AI reads 6 weeks of team decisions before answering. You just see a much better answer.</div>
-          </div>
-        </div>
-        <div class="istep rv">
-          <div class="istep-n">03</div>
-          <div>
-            <div class="istep-title">Git hook captures every commit silently</div>
-            <div class="istep-body">After swapcore init, a post-commit hook fires after every git push. Sends the commit to SWAPCORE. IntentInferrer infers why_text from your message, PR, and linked tickets. Zero manual effort.</div>
-          </div>
-        </div>
-        <div class="istep rv">
-          <div class="istep-n">04</div>
-          <div>
-            <div class="istep-title">Record key decisions in 30 seconds each</div>
-            <div class="istep-body">Two CLI commands at the end of a session. The reasoning you capture today will inform every developer — and every AI session — that touches this code in the future.</div>
-          </div>
-        </div>
+      <p style="font-size:.9rem;color:var(--g7);line-height:1.8;margin-bottom:2rem" class="rv">The SWAPCORE MCP server exposes 5 tools that Cursor's AI calls automatically. When you ask an architecture question, Cursor calls <span style="color:var(--cyan);font-family:var(--fm);font-size:.8rem">swapcore_get_context()</span> before generating its response — invisibly, in under 200ms.</p>
+      <div class="mcp-tools rv d1">
+        <div class="mtool"><div class="mtool-name">get_context()</div><div class="mtool-desc">Fetch relevant memory for any question. Returns top-8 MemoryRecords ranked by keyword + semantic score.</div></div>
+        <div class="mtool"><div class="mtool-name">record_decision()</div><div class="mtool-desc">Save a decision with what + why + tags. Called at end of session to preserve reasoning for future developers.</div></div>
+        <div class="mtool"><div class="mtool-name">record_risk()</div><div class="mtool-desc">Flag a known gap or shortcut with deferred_because rationale. Surfaces in risk dashboard and future context.</div></div>
+        <div class="mtool"><div class="mtool-name">get_open_risks()</div><div class="mtool-desc">List all unresolved risk flags for the project. Called before starting new features to surface known issues.</div></div>
+        <div class="mtool"><div class="mtool-name">debug()</div><div class="mtool-desc">Trace a bug backward through commits, decisions, and risk flags. Returns full causal chain with confidence.</div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- VIBE CODING -->
-<section class="vibe-bg" id="vibe">
-  <div class="eye rv">Vibe coding</div>
-  <h2 class="sh1 rv">BUILD FASTER.<br>FORGET<br>NOTHING.</h2>
-  <p class="sbody rv">SWAPCORE is the persistent memory layer that every vibe coding tool has been missing. Sessions compound. Context survives. The AI gets smarter every week.</p>
-  <div class="vibe-grid">
-    <div class="vcard rv">
-      <div class="vcard-bg-n">1</div>
-      <div class="vtag vtag-now">Available now</div>
-      <div class="vcard-title">Memory layer alongside Cursor</div>
-      <div class="vcard-body">Build with Cursor as normal. SWAPCORE runs alongside it silently. Git hooks capture every commit. Record 2–3 decisions per session. Next session: Cursor has full project history — no re-explaining your stack.</div>
-      <div class="vcode">
-        <span class="cmt"># End of session — takes 90 seconds total</span><br>
-        <span class="cmd">swapcore record decision</span> \<br>
-        &nbsp;&nbsp;--title <span style="color:var(--accent2)">"Using Zustand over Redux"</span> \<br>
-        &nbsp;&nbsp;--why <span style="color:var(--accent2)">"Redux overhead too high</span><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--accent2)">for our app size"</span>
-      </div>
-    </div>
-    <div class="vcard rv rv-d1">
-      <div class="vcard-bg-n">2</div>
-      <div class="vtag vtag-s2">Stage 2</div>
-      <div class="vcard-title">Dev Agent as vibe engine</div>
-      <div class="vcard-body">Tell the Dev Agent what to build in plain English. It fetches full project memory before writing a single line — every past decision, every rejected approach. Never suggests something you already tried and discarded.</div>
-      <div class="vcode">
-        <span class="cmt"># Stage 2 — builds with full memory context</span><br>
-        <span class="cmd">swapcore build</span> \<br>
-        &nbsp;&nbsp;--ticket PAY-391 \<br>
-        &nbsp;&nbsp;--description <span style="color:var(--accent2)">"Add retry</span><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--accent2)">to Stripe calls"</span>
-      </div>
-    </div>
-    <div class="vcard rv rv-d2">
-      <div class="vcard-bg-n">3</div>
-      <div class="vtag vtag-key">Most important</div>
-      <div class="vcard-title">Multi-session persistence</div>
-      <div class="vcard-body">The biggest vibe coding failure: session amnesia. By week 4 you spend 40 minutes re-explaining your stack. SWAPCORE eliminates this. Onboard a collaborator in 20 minutes at week 8 instead of 2 days.</div>
-      <div class="vcode">
-        <span class="cmt"># Start every new session this way</span><br>
-        <span class="cmd">swapcore onboard</span> \<br>
-        &nbsp;&nbsp;--project my-saas \<br>
-        &nbsp;&nbsp;--days 999<br>
-        <span class="cmt"># Paste full brief into Cursor. Done.</span>
-      </div>
-    </div>
-  </div>
-</section>
+<hr class="hr">
 
 <!-- COMPARE -->
-<section class="cmp-bg" id="compare">
-  <div class="eye rv">Competitive landscape</div>
-  <h2 class="sh1 rv">NOBODY ELSE<br>OWNS THIS<br>LAYER</h2>
-  <p class="sbody rv">Every competitor is locked to one tool, one session, or one workflow slice. SWAPCORE owns the tool-agnostic institutional memory layer that nobody has built.</p>
+<section class="cmp-section" id="compare">
+  <div class="seye rv">Competitive landscape</div>
+  <h2 class="sh1 rv">NOBODY ELSE<br>OWNS THIS LAYER</h2>
+  <p class="sbody rv">Every competitor is locked to one tool, one session, or one slice. SWAPCORE owns the tool-agnostic institutional memory layer across the full SDLC.</p>
   <div style="overflow-x:auto">
-  <table class="cmp-table rv">
+  <table class="ctable rv">
     <thead>
       <tr>
-        <th style="width:190px">Capability</th>
-        <th class="hl sc-col">SWAPCORE</th>
+        <th style="width:180px">Capability</th>
+        <th class="hl sc">SWAPCORE</th>
         <th>GitHub Copilot</th>
         <th>Atlassian AI</th>
         <th>Devin / SWE</th>
         <th>Datadog</th>
+        <th>Linear AI</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td class="feat">Persistent cross-session memory</td><td class="sc-col td-y">✓ Always</td><td class="td-n">— Never</td><td class="td-p">◑ Jira only</td><td class="td-n">— Never</td><td class="td-n">— Never</td></tr>
-      <tr><td class="feat">Why decisions were made</td><td class="sc-col td-y">✓ Core feature</td><td class="td-n">— None</td><td class="td-n">— None</td><td class="td-n">— None</td><td class="td-n">— None</td></tr>
-      <tr><td class="feat">Tool-agnostic (any stack)</td><td class="sc-col td-y">✓ By design</td><td class="td-p">◑ GitHub only</td><td class="td-p">◑ Atlassian</td><td class="td-p">◑ Limited</td><td class="td-p">◑ Observability</td></tr>
-      <tr><td class="feat">Causal debug chain</td><td class="sc-col td-y">✓ Full trace</td><td class="td-n">— None</td><td class="td-n">— None</td><td class="td-n">— None</td><td class="td-p">◑ Metrics only</td></tr>
-      <tr><td class="feat">Onboarding brief generation</td><td class="sc-col td-y">✓ Automatic</td><td class="td-n">— None</td><td class="td-n">— None</td><td class="td-n">— None</td><td class="td-n">— None</td></tr>
-      <tr><td class="feat">Works with Cursor via MCP</td><td class="sc-col td-y">✓ Native</td><td class="td-y">✓ Own</td><td class="td-n">— None</td><td class="td-p">◑ Own IDE</td><td class="td-n">— None</td></tr>
-      <tr><td class="feat">On-prem enterprise</td><td class="sc-col td-y">✓ Full</td><td class="td-n">— Cloud only</td><td class="td-p">◑ Server</td><td class="td-n">— None</td><td class="td-y">✓ Yes</td></tr>
-      <tr><td class="feat">Data moat (compounds daily)</td><td class="sc-col td-y">✓ Grows daily</td><td class="td-n">— Session</td><td class="td-n">— None</td><td class="td-n">— None</td><td class="td-n">— None</td></tr>
+      <tr><td class="feat">Cross-session memory</td><td class="sc ty">✓ Always</td><td class="tn">— Never</td><td class="tp">◑ Jira only</td><td class="tn">— Never</td><td class="tn">— Never</td><td class="tn">— Never</td></tr>
+      <tr><td class="feat">Why decisions stored</td><td class="sc ty">✓ Core feature</td><td class="tn">— None</td><td class="tn">— None</td><td class="tn">— None</td><td class="tn">— None</td><td class="tn">— None</td></tr>
+      <tr><td class="feat">Tool-agnostic</td><td class="sc ty">✓ By design</td><td class="tp">◑ GitHub only</td><td class="tp">◑ Atlassian</td><td class="tp">◑ Limited</td><td class="tp">◑ Observ.</td><td class="tp">◑ PM only</td></tr>
+      <tr><td class="feat">Causal debug chain</td><td class="sc ty">✓ Full trace</td><td class="tn">— None</td><td class="tn">— None</td><td class="tn">— None</td><td class="tp">◑ Metrics</td><td class="tn">— None</td></tr>
+      <tr><td class="feat">Onboarding brief</td><td class="sc ty">✓ Automatic</td><td class="tn">— None</td><td class="tn">— None</td><td class="tn">— None</td><td class="tn">— None</td><td class="tn">— None</td></tr>
+      <tr><td class="feat">Full SDLC coverage</td><td class="sc ty">✓ All stages</td><td class="tp">◑ Code only</td><td class="tp">◑ PM + code</td><td class="tp">◑ Code only</td><td class="tp">◑ Ops only</td><td class="tp">◑ PM only</td></tr>
+      <tr><td class="feat">On-prem enterprise</td><td class="sc ty">✓ Helm + k8s</td><td class="tn">— Cloud</td><td class="tp">◑ Server</td><td class="tn">— Cloud</td><td class="ty">✓ Yes</td><td class="tn">— Cloud</td></tr>
+      <tr><td class="feat">Data moat compounds</td><td class="sc ty">✓ Daily</td><td class="tn">— Session</td><td class="tn">— None</td><td class="tn">— None</td><td class="tn">— None</td><td class="tn">— None</td></tr>
+      <tr><td class="feat">Autonomous agents</td><td class="sc ty">✓ Stage 2+</td><td class="tp">◑ Code gen</td><td class="tp">◑ Limited</td><td class="ty">✓ Code</td><td class="tn">— None</td><td class="tp">◑ PM only</td></tr>
     </tbody>
   </table>
   </div>
 </section>
 
+<hr class="hr">
+
 <!-- PRICING -->
-<section class="price-bg" id="pricing">
-  <div class="eye rv">Pricing</div>
+<section class="price-section" id="pricing">
+  <div class="seye rv">Pricing</div>
   <h2 class="sh1 rv">SIMPLE.<br>SCALABLE.<br>ANNUAL.</h2>
-  <p class="sbody rv">Priced on team size, not per seat. The value of institutional memory is organisational — not individual.</p>
-  <div class="price-grid">
+  <p class="sbody rv">Priced on team size — not per seat. The value of institutional memory is organisational.</p>
+  <div class="pgrid">
     <div class="plan rv">
-      <div class="plan-name">Team</div>
-      <div class="plan-price">$2<sub>K / mo</sub></div>
-      <div class="plan-period">Up to 20 engineers · Billed annually</div>
-      <ul class="plan-feats">
+      <div class="pname">Team</div>
+      <div class="pprice">$2<sub>K/mo</sub></div>
+      <div class="pper">Up to 20 engineers · Billed annually</div>
+      <ul class="pflts">
         <li>GitHub + Jira + Jenkins adapters</li>
         <li>Architect Agent — 5 query types</li>
-        <li>CLI tool + web dashboard</li>
+        <li>CLI + web dashboard</li>
         <li>Unlimited memory storage</li>
-        <li>MCP integration for Cursor</li>
+        <li>MCP for Cursor / Claude</li>
         <li>Email support</li>
       </ul>
-      <a href="mailto:hello@swapcore.io" class="plan-btn">Get started</a>
+      <a href="mailto:hello@swapcore.io" class="pbtn">Get started</a>
     </div>
-    <div class="plan feat rv rv-d1">
-      <div class="plan-badge">Most popular</div>
-      <div class="plan-name">Growth</div>
-      <div class="plan-price">$5<sub>K / mo</sub></div>
-      <div class="plan-period">Up to 100 engineers · Billed annually</div>
-      <ul class="plan-feats">
+    <div class="plan feat rv d1">
+      <div class="pbadge">Most popular</div>
+      <div class="pname">Growth</div>
+      <div class="pprice">$5<sub>K/mo</sub></div>
+      <div class="pper">Up to 100 engineers · Billed annually</div>
+      <ul class="pflts">
         <li>All 20+ tool integrations</li>
         <li>Unlimited dashboard seats</li>
         <li>SSO via Keycloak</li>
-        <li>Stage 2 agents (early access)</li>
+        <li>Stage 2 agents — early access</li>
         <li>Slack integration included</li>
         <li>Priority support + SLA</li>
       </ul>
-      <a href="mailto:hello@swapcore.io" class="plan-btn">Request early access</a>
+      <a href="mailto:hello@swapcore.io" class="pbtn">Request early access</a>
     </div>
-    <div class="plan rv rv-d2">
-      <div class="plan-name">Enterprise</div>
-      <div class="plan-price">Custom</div>
-      <div class="plan-period">500+ engineers · On-prem available</div>
-      <ul class="plan-feats">
-        <li>On-prem Kubernetes deployment</li>
-        <li>Custom tool adapters</li>
+    <div class="plan rv d2">
+      <div class="pname">Enterprise</div>
+      <div class="pprice">Custom</div>
+      <div class="pper">500+ engineers · On-prem available</div>
+      <ul class="pflts">
+        <li>On-prem Kubernetes + Helm</li>
+        <li>Custom adapters + marketplace</li>
         <li>SOC2 / ISO27001 audit exports</li>
-        <li>Per-org encryption keys (Vault)</li>
+        <li>Per-org encryption (Vault/KMS)</li>
         <li>Active Directory / Okta SSO</li>
         <li>Dedicated support engineer</li>
       </ul>
-      <a href="mailto:enterprise@swapcore.io" class="plan-btn">Contact sales</a>
+      <a href="mailto:enterprise@swapcore.io" class="pbtn">Contact sales</a>
     </div>
   </div>
 </section>
 
+<hr class="hr">
+
 <!-- TEAM -->
-<section class="team-bg" id="team">
-  <div class="eye rv">The founders</div>
+<section class="team-section" id="team">
+  <div class="seye rv">The founders</div>
   <h2 class="sh1 rv">BUILT BY<br>ENGINEERS<br>WHO FELT<br>THE PAIN</h2>
-  <p class="sbody rv">Three founders. Combined decades of experience watching institutional knowledge walk out the door with every engineer who resigned.</p>
-  <div class="team-grid">
-
-    <div class="tmember rv">
-      <div class="tmember-avatar av-1">
-        <div class="av-bg"></div>
-        <div class="av-grid"></div>
-        <div class="av-initials">SS</div>
-      </div>
-      <div class="tm-role role-ceo">Chief Executive Officer</div>
-      <div class="tm-name">Shashank Sonawane</div>
-      <div class="tm-bio">Shashank leads SWAPCORE's vision, strategy, and go-to-market. He brings deep experience building and scaling B2B software products in the developer tools space, with a sharp focus on solving the institutional knowledge problem that costs engineering teams weeks of lost productivity every year.</div>
-      <div class="tm-tag">CEO · Product vision · GTM strategy</div>
+  <p class="sbody rv">Three founders. Combined decades watching institutional knowledge walk out the door every time a senior engineer resigned.</p>
+  <div class="tgrid">
+    <div class="tmem rv">
+      <div class="tav av1"><div class="tav-bg"></div><div class="tav-grid"></div><div class="tav-init">SS</div></div>
+      <div class="trole rceo">Chief Executive Officer</div>
+      <div class="tname">Shashank Sonawane</div>
+      <div class="tbio">Shashank leads SWAPCORE's vision, strategy, and go-to-market. He brings deep experience building and scaling B2B developer tools, with a sharp focus on solving the institutional knowledge problem that costs engineering teams weeks of lost productivity every year.</div>
+      <div class="ttag">CEO · Product vision · GTM strategy</div>
     </div>
-
-    <div class="tmember rv rv-d1">
-      <div class="tmember-avatar av-2">
-        <div class="av-bg"></div>
-        <div class="av-grid"></div>
-        <div class="av-initials">GA</div>
-      </div>
-      <div class="tm-role role-cto">Chief Technology Officer</div>
-      <div class="tm-name">Gaurav Ashtikar</div>
-      <div class="tm-bio">Gaurav architects and leads the engineering of SWAPCORE's core platform — the four-layer memory system, the Architect Agent, and the MCP integration layer. He designed the tool-agnostic adapter architecture that lets SWAPCORE connect to any development tool without changing how engineers work.</div>
-      <div class="tm-tag">CTO · Platform architecture · AI systems</div>
+    <div class="tmem rv d1">
+      <div class="tav av2"><div class="tav-bg"></div><div class="tav-grid"></div><div class="tav-init">GA</div></div>
+      <div class="trole rcto">Chief Technology Officer</div>
+      <div class="tname">Gaurav Ashtikar</div>
+      <div class="tbio">Gaurav architects SWAPCORE's core platform — the four-layer memory system, the Architect Agent, the MCP integration layer, and the autonomous agent pipeline. He designed the tool-agnostic adapter architecture that lets SWAPCORE connect to any development tool without changing how engineers work.</div>
+      <div class="ttag">CTO · Platform architecture · AI systems</div>
     </div>
-
-    <div class="tmember rv rv-d2">
-      <div class="tmember-avatar av-3">
-        <div class="av-bg"></div>
-        <div class="av-grid"></div>
-        <div class="av-initials">KS</div>
-      </div>
-      <div class="tm-role role-cfo">Chief Financial Officer</div>
-      <div class="tm-name">Kishor Shelke</div>
-      <div class="tm-bio">Kishor manages SWAPCORE's financial strategy, investor relations, and operational scaling. He ensures the business is built to last — from early customer revenue through enterprise contracts, with the financial discipline that turns a great product into a great company.</div>
-      <div class="tm-tag">CFO · Finance · Operations · Investor relations</div>
+    <div class="tmem rv d2">
+      <div class="tav av3"><div class="tav-bg"></div><div class="tav-grid"></div><div class="tav-init">KS</div></div>
+      <div class="trole rcfo">Chief Financial Officer</div>
+      <div class="tname">Kishor Shelke</div>
+      <div class="tbio">Kishor manages SWAPCORE's financial strategy, investor relations, and operational scaling. He ensures the business is built to last — from early customer revenue through enterprise contracts, with the discipline that turns a great product into a great company.</div>
+      <div class="ttag">CFO · Finance · Operations · Investor relations</div>
     </div>
-
   </div>
 </section>
 
 <!-- CTA -->
-<section class="cta-wrap">
+<section class="cta-section">
   <div class="cta-glow"></div>
-  <h2 class="cta-h rv">STOP LOSING<br>YOUR WHY</h2>
-  <p class="cta-sub rv">The first team to deploy SWAPCORE has a compounding institutional memory advantage. Every week without it is a week of context lost forever.</p>
-  <div class="cta-btns rv">
-    <a href="mailto:hello@swapcore.io" class="btn-w">Request early access</a>
-    <a href="mailto:hello@swapcore.io" class="btn-o">Talk to the team →</a>
+  <h2 class="ctah rv">STOP LOSING<br>YOUR WHY</h2>
+  <p class="ctas rv">The first team to deploy SWAPCORE builds a compounding memory advantage. Every week without it is a week of context lost forever.</p>
+  <div class="ctabtns rv">
+    <a href="mailto:hello@swapcore.io" class="bs">Request early access</a>
+    <a href="mailto:hello@swapcore.io" class="bg">Talk to the team →</a>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="foot-grid">
+  <div class="fg">
     <div>
-      <div class="foot-brand">SWAP<em>CORE</em></div>
-      <p class="foot-tagline">The AI development intelligence platform that stores why your code was built the way it was.</p>
+      <div class="fbrand">SWAP<b>CORE</b></div>
+      <p class="ftagline">The AI development intelligence platform that stores why your code was built the way it was.</p>
     </div>
-    <div class="foot-col">
+    <div class="fc4">
       <h4>Product</h4>
       <ul>
-        <li><a href="#how">How it works</a></li>
-        <li><a href="#integration">Cursor integration</a></li>
-        <li><a href="#vibe">Vibe coding</a></li>
+        <li><a href="#stages">All stages</a></li>
+        <li><a href="#memory">Memory layer</a></li>
+        <li><a href="#vibe-example">Vibe example</a></li><li><a href="#cursor">Cursor MCP</a></li>
         <li><a href="#pricing">Pricing</a></li>
       </ul>
     </div>
-    <div class="foot-col">
+    <div class="fc4">
       <h4>Company</h4>
       <ul>
         <li><a href="#team">Team</a></li>
@@ -772,7 +1498,7 @@ cd your-repo && swapcore init \<br>
         <li><a href="#">Careers</a></li>
       </ul>
     </div>
-    <div class="foot-col">
+    <div class="fc4">
       <h4>Resources</h4>
       <ul>
         <li><a href="#">Documentation</a></li>
@@ -782,44 +1508,67 @@ cd your-repo && swapcore init \<br>
       </ul>
     </div>
   </div>
-  <div class="foot-btm">
+  <div class="fbtm">
     <span>© 2025 SWAPCORE. All rights reserved.</span>
     <span>hello@swapcore.io</span>
   </div>
 </footer>
 
 <script>
-// Starfield
+// Stars
 (function(){
-  var c=document.getElementById('stars'),ctx=c.getContext('2d'),stars=[];
-  function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
-  resize();window.addEventListener('resize',resize);
-  for(var i=0;i<220;i++) stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.1+.2,a:Math.random()*6.28,s:Math.random()*.4+.05});
-  function draw(){
-    ctx.clearRect(0,0,c.width,c.height);
-    ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);
-    stars.forEach(function(s){
-      s.a+=s.s*.01;
-      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);
-      ctx.fillStyle='rgba(255,255,255,'+(0.38+0.32*Math.sin(s.a))+')';ctx.fill();
+  var c=document.getElementById('sc'),x=c.getContext('2d'),s=[];
+  function r(){c.width=window.innerWidth;c.height=window.innerHeight}
+  r();window.addEventListener('resize',r);
+  for(var i=0;i<240;i++) s.push({x:Math.random(),y:Math.random(),r:Math.random()*1.1+.2,a:Math.random()*6.28,sp:Math.random()*.5+.04});
+  function d(){
+    x.clearRect(0,0,c.width,c.height);
+    x.fillStyle='#000';x.fillRect(0,0,c.width,c.height);
+    s.forEach(function(p){
+      p.a+=p.sp*.012;
+      x.beginPath();x.arc(p.x*c.width,p.y*c.height,p.r,0,6.28);
+      x.fillStyle='rgba(255,255,255,'+(0.3+0.3*Math.sin(p.a))+')';x.fill();
     });
-    requestAnimationFrame(draw);
+    requestAnimationFrame(d);
   }
-  draw();
+  d();
 })();
 
-// Nav scroll
+// Nav
 window.addEventListener('scroll',function(){
-  document.getElementById('mainNav').classList.toggle('solid',window.scrollY>60);
+  document.getElementById('nav').classList.toggle('on',scrollY>50);
 });
 
-// Reveal on scroll
+// Reveal
 (function(){
   var els=document.querySelectorAll('.rv');
   var io=new IntersectionObserver(function(e){
     e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('vis');io.unobserve(x.target);}});
-  },{threshold:.1});
+  },{threshold:.08});
   els.forEach(function(el){io.observe(el);});
+})();
+
+// Vibe coding accordion
+function toggleSession(el){
+  var wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.session').forEach(function(s){s.classList.remove('open');});
+  if(!wasOpen) el.classList.add('open');
+}
+
+// Stage tab highlight on scroll
+(function(){
+  var dots=document.querySelectorAll('.stage-dot');
+  var blocks=document.querySelectorAll('.stage-block');
+  var io=new IntersectionObserver(function(e){
+    e.forEach(function(entry){
+      if(entry.isIntersecting){
+        var idx=Array.from(blocks).indexOf(entry.target);
+        if(idx>=0) dots[idx].style.transform='scale(1.5)';
+        else dots.forEach(function(d){d.style.transform='';});
+      }
+    });
+  },{threshold:.3});
+  blocks.forEach(function(b){io.observe(b);});
 })();
 </script>
 </body>
